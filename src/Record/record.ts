@@ -45,7 +45,7 @@ export function createRecord (record: IRecord) {
     },
 
     get record () {
-      return { ..._record }
+      return _record
     },
 
     setAttribute: curryFn((attribute: string, value: any): typeof self => {
