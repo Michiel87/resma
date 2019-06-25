@@ -21,15 +21,24 @@ type Relationship = string
 type RelatedId = string
 type Value = any
 
-export type Listener = (record: IRecord) => void
+export type Listener = null|((record: IRecord) => void)
 
 export class Record {
   _record: IRecord
   _listener: Listener
   
-  constructor (record: IRecord, listener: Listener) {
-    this._listener = listener
+  constructor (record: IRecord) {
+    this._listener = null
     this._record = record
+  }
+
+  subscribe (listener: Listener) {
+    this._listener = listener
+    const self = this
+
+    return function unSubscribe () {
+      self._listener = null
+    }
   }
 
   get id () {
@@ -50,15 +59,11 @@ export class Record {
 
   setAttribute (...args: Array<Attribute|Value>) {
     return curryFn((attribute: string, value: any): this => {
-      this._record = {
-        ...this._record,
-        attributes: {
-          ...this._record.attributes,
-          [attribute]: value
-        }
-      }
+      this._record = produce(this._record, draft => {
+        draft.attributes[attribute] = value
+      })
 
-      this._listener(this._record)
+      this._listener && this._listener && this._listener(this._record)
       return this
     })(...args)
   }
@@ -79,7 +84,7 @@ export class Record {
         }
       })
 
-      this._listener(this._record)
+      this._listener && this._listener(this._record)
       return this
     })(...args)
   }
@@ -100,7 +105,7 @@ export class Record {
         }
       })
 
-      this._listener(this._record)
+      this._listener && this._listener(this._record)
       return this
     })(...args)
   }
@@ -115,7 +120,7 @@ export class Record {
         }
       })
 
-      this._listener(this._record)
+      this._listener && this._listener(this._record)
       return this
     })(...args)
   }

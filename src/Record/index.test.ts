@@ -21,33 +21,34 @@ const testRecord = {
 
 describe('Record class', () => {
   test('record keeps reference if nothing changes', () => {
-    const record = new Record(testRecord, jest.fn())
+    const record = new Record(testRecord)
     expect(record._record).toBe(testRecord)
   })
 
   test('Getting record id', () => {
-    const record = new Record(testRecord, jest.fn())
+    const record = new Record(testRecord)
     expect(record.id).toBe('12')
   })
 
   test('Getting record type', () => {
-    const record = new Record(testRecord, jest.fn())
+    const record = new Record(testRecord)
     expect(record.type).toBe('company')
   })
 
   test('Getting attributes', () => {
-    const record = new Record(testRecord, jest.fn())
+    const record = new Record(testRecord)
     expect(record.attributes).toBe(record.attributes)
   })
 
   test('Getting relationships', () => {
-    const record = new Record(testRecord, jest.fn())
+    const record = new Record(testRecord)
     expect(record.relationships).toBe(record.relationships)
   })
 
   test('setAtrribute', () => {
     const mockListener = jest.fn()
-    const record = new Record(testRecord, mockListener)
+    const record = new Record(testRecord)
+    record.subscribe(mockListener)
 
     record.setAttribute('name', 'cloud company')
     record.setAttribute('newAttr', 'fake value')
@@ -60,7 +61,8 @@ describe('Record class', () => {
 
   test('setAtrribute curried functionality', () => {
     const mockListener = jest.fn()
-    const record = new Record(testRecord, mockListener)
+    const record = new Record(testRecord)
+    record.subscribe(mockListener)
 
     record.setAttribute('name')('cloud company')
     record.setAttribute('newAttr')('fake value')
@@ -73,7 +75,8 @@ describe('Record class', () => {
 
   test('addHasOne', () => {
     const mockListener = jest.fn()
-    const record = new Record(testRecord, mockListener)
+    const record = new Record(testRecord)
+    record.subscribe(mockListener)
 
     const newCeo = { type: 'ceo', id: '3'}
     const newRel = { type: 'newRel', id: '1' }
@@ -89,7 +92,8 @@ describe('Record class', () => {
 
   test('addHasOne curried functionality', () => {
     const mockListener = jest.fn()
-    const record = new Record(testRecord, mockListener)
+    const record = new Record(testRecord)
+    record.subscribe(mockListener)
 
     const newCeo = { type: 'ceo', id: '3'}
     const newRel = { type: 'newRel', id: '1' }
@@ -105,7 +109,8 @@ describe('Record class', () => {
 
   test('addHasMany', () => {
     const mockListener = jest.fn()
-    const record = new Record(testRecord, mockListener)
+    const record = new Record(testRecord)
+    record.subscribe(mockListener)
 
     const newEmployee = { type: 'employee', id: '2'}
     const newRel = { type: 'newRel', id: '1' }
@@ -122,7 +127,8 @@ describe('Record class', () => {
 
   test('addHasMany curried functionality', () => {
     const mockListener = jest.fn()
-    const record = new Record(testRecord, mockListener)
+    const record = new Record(testRecord)
+    record.subscribe(mockListener)
 
     const newEmployee = { type: 'employee', id: '2'}
     const newRel = { type: 'newRel', id: '1' }
@@ -139,7 +145,8 @@ describe('Record class', () => {
 
   test('removeRelationship', () => {
     const mockListener = jest.fn()
-    const record = new Record(testRecord, mockListener)
+    const record = new Record(testRecord)
+    record.subscribe(mockListener)
 
     record.removeRelationship('employees', '1')
     record.removeRelationship('ceo', '1')
@@ -152,7 +159,8 @@ describe('Record class', () => {
 
   test('removeRelationship curried functionality', () => {
     const mockListener = jest.fn()
-    const record = new Record(testRecord, mockListener)
+    const record = new Record(testRecord)
+    record.subscribe(mockListener)
 
     record.removeRelationship('employees')('1')
     record.removeRelationship('ceo')('1')
@@ -165,7 +173,8 @@ describe('Record class', () => {
 
   test('chaining methods', () => {
     const mockListener = jest.fn()
-    const record = new Record(testRecord, mockListener)
+    const record = new Record(testRecord)
+    record.subscribe(mockListener)
 
     const newCeo = { type: 'ceo', id: '3'}
     const newPhoto = { type: 'photo', id: '1'}
