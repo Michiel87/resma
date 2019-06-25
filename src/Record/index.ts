@@ -43,63 +43,71 @@ export class Record {
     return this._record.relationships
   }
 
-  setAttribute = curryFn((attribute: string, value: any): this => {
-    this._record = produce(this._record, draft => {
+  setAttribute (attribute: string, value?: any) {
+    return curryFn((attribute: string, value: any): this => {
+      this._record = produce(this._record, draft => {
         draft.attributes[attribute] = value
-    })
+      })
 
-    this._listener(this._record)
-    return this
-  })
+      this._listener(this._record)
+      return this
+    })(attribute, value)
+  }
 
-  addHasOne = curryFn((relationship: string, recordIdentifier: RecordIdentifier): this => {
-    this._record = produce<IRecord, void, IRecord>(this._record, draft => {
-      if (hasRelationship.call(draft, relationship)) {
-        draft.relationships![relationship].data = recordIdentifier
-      } else if (draft.relationships) {
-        draft.relationships[relationship] = { data: recordIdentifier }
-      } else {
-        draft.relationships = { 
-          [relationship]: {
-            data: recordIdentifier
+  addHasOne (relationship: string, recordIdentifier?: RecordIdentifier) {
+    return curryFn((relationship: string, recordIdentifier: RecordIdentifier): this => {
+      this._record = produce<IRecord, void, IRecord>(this._record, draft => {
+        if (hasRelationship.call(draft, relationship)) {
+          draft.relationships![relationship].data = recordIdentifier
+        } else if (draft.relationships) {
+          draft.relationships[relationship] = { data: recordIdentifier }
+        } else {
+          draft.relationships = {
+            [relationship]: {
+              data: recordIdentifier
+            }
           }
         }
-      }
-    })
+      })
 
-    this._listener(this._record)
-    return this
-  })
+      this._listener(this._record)
+      return this
+    })(relationship, recordIdentifier)
+  }
 
-  addHasMany = curryFn((relationship: string, recordIdentifier: RecordIdentifier): this => {
-    this._record = produce<IRecord, void, IRecord>(this._record, draft => {
-      if (hasRelationship.call(draft, relationship)) {
-        draft.relationships![relationship].data.push(recordIdentifier)
-      } else if (draft.relationships) {
-        draft.relationships[relationship] = { data: [ recordIdentifier ] }
-      } else {
-        draft.relationships = { 
-          [relationship]: {
-            data: [ recordIdentifier ]
+  addHasMany (relationship: string, recordIdentifier?: RecordIdentifier) {
+    return curryFn((relationship: string, recordIdentifier: RecordIdentifier): this => {
+      this._record = produce<IRecord, void, IRecord>(this._record, draft => {
+        if (hasRelationship.call(draft, relationship)) {
+          draft.relationships![relationship].data.push(recordIdentifier)
+        } else if (draft.relationships) {
+          draft.relationships[relationship] = { data: [ recordIdentifier ] }
+        } else {
+          draft.relationships = {
+            [relationship]: {
+              data: [ recordIdentifier ]
+            }
           }
         }
-      }
-    })
+      })
 
-    this._listener(this._record)
-    return this
-  })
+      this._listener(this._record)
+      return this
+    })(relationship, recordIdentifier)
+  }
 
-  removeRelationship = curryFn((relationship: string, relatedId: string) => {
-    this._record = produce<IRecord, void, IRecord>(this._record, draft => {
-      if (hasRelationship.call(draft, relationship)) {
-        draft.relationships![relationship].data = Array.isArray(getRelationship.call(draft, relationship))
-          ? removeHasMany.call(draft, relationship, relatedId)
-          : {}
-      }
-    })
+  removeRelationship (relationship: string, relatedId?: string) {
+    return curryFn((relationship: string, relatedId: string) => {
+      this._record = produce<IRecord, void, IRecord>(this._record, draft => {
+        if (hasRelationship.call(draft, relationship)) {
+          draft.relationships![relationship].data = Array.isArray(getRelationship.call(draft, relationship))
+             ? removeHasMany.call(draft, relationship, relatedId)
+             : {}
+        }
+      })
 
-    this._listener(this._record)
-    return this
-  })
+      this._listener(this._record)
+      return this
+    })(relationship, relatedId)
+  }
 }
