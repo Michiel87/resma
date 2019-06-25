@@ -50,9 +50,13 @@ export class Record {
 
   setAttribute (...args: Array<Attribute|Value>) {
     return curryFn((attribute: string, value: any): this => {
-      this._record = produce(this._record, draft => {
-        draft.attributes[attribute] = value
-      })
+      this._record = {
+        ...this._record,
+        attributes: {
+          ...this._record.attributes,
+          [attribute]: value
+        }
+      }
 
       this._listener(this._record)
       return this
