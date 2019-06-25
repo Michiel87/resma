@@ -16,6 +16,11 @@ export interface IRecord extends RecordIdentifier {
   }
 }
 
+type Attribute = string
+type Relationship = string
+type RelatedId = string
+type Value = any
+
 export type Listener = (record: IRecord) => void
 
 export class Record {
@@ -43,7 +48,7 @@ export class Record {
     return this._record.relationships
   }
 
-  setAttribute (attribute: string, value?: any) {
+  setAttribute (...args: Array<Attribute|Value>) {
     return curryFn((attribute: string, value: any): this => {
       this._record = produce(this._record, draft => {
         draft.attributes[attribute] = value
@@ -51,10 +56,10 @@ export class Record {
 
       this._listener(this._record)
       return this
-    })(attribute, value)
+    })(...args)
   }
 
-  addHasOne (relationship: string, recordIdentifier?: RecordIdentifier) {
+  addHasOne (...args: Array<Relationship|RecordIdentifier>) {
     return curryFn((relationship: string, recordIdentifier: RecordIdentifier): this => {
       this._record = produce<IRecord, void, IRecord>(this._record, draft => {
         if (hasRelationship.call(draft, relationship)) {
@@ -72,10 +77,10 @@ export class Record {
 
       this._listener(this._record)
       return this
-    })(relationship, recordIdentifier)
+    })(...args)
   }
 
-  addHasMany (relationship: string, recordIdentifier?: RecordIdentifier) {
+  addHasMany (...args: Array<Relationship|RecordIdentifier>) {
     return curryFn((relationship: string, recordIdentifier: RecordIdentifier): this => {
       this._record = produce<IRecord, void, IRecord>(this._record, draft => {
         if (hasRelationship.call(draft, relationship)) {
@@ -93,10 +98,10 @@ export class Record {
 
       this._listener(this._record)
       return this
-    })(relationship, recordIdentifier)
+    })(...args)
   }
 
-  removeRelationship (relationship: string, relatedId?: string) {
+  removeRelationship (...args: Array<Relationship|RelatedId>) {
     return curryFn((relationship: string, relatedId: string) => {
       this._record = produce<IRecord, void, IRecord>(this._record, draft => {
         if (hasRelationship.call(draft, relationship)) {
@@ -108,6 +113,6 @@ export class Record {
 
       this._listener(this._record)
       return this
-    })(relationship, relatedId)
+    })(...args)
   }
 }
