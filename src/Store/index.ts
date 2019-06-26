@@ -26,14 +26,16 @@ export class Store {
     this._uId = options.startId || 0
   }
 
-  subscribe (record: IRecord, subscription: any) {
+  register (record: IRecord): number {
     const id = this._uId++
-    const self = this
-
     this._store[id] = record
-    this._subscriptions[id] = subscription
 
-    subscription(id, record)
+    return id
+  }
+
+  subscribe (id: number, subscription: any) {
+    const self = this
+    this._subscriptions[id] = subscription
 
     return function unSubscribe () {
       delete self._subscriptions[id]
@@ -41,11 +43,16 @@ export class Store {
     }
   }
 
-  dispatcher (storeId: string) {
+  unSubscribe (id: number) {
+    delete this._subscriptions[id]
+    delete this._store[id]
+  }
+
+  dispatcher (storeId: number) {
     return this._dispatcher.create(this.storeReducer(storeId))
   }
 
-  storeReducer (id: string) {
+  storeReducer (id: number) {
     const self = this
 
     return function reducer (action: any) {
@@ -54,7 +61,7 @@ export class Store {
 
       self._store[id] = newRecordState
       // @todo validate if listener ref stays the same
-      self._subscriptions[id](id, newRecordState)
+      self._subscriptions[id](newRecordState)
     }
   }
 }

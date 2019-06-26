@@ -51,11 +51,10 @@ describe('Record class', () => {
   })
 
   test('setAtrribute', () => {
-    let storeId: any
     let storeRecord: any
+    const storeId = store.register(testRecord)
 
-    const unSubscribe = store.subscribe(testRecord, (id: string, record: IRecord) => {
-      storeId = id
+    const unSubscribe = store.subscribe(storeId, (record: IRecord) => {
       storeRecord = record
     })
 
@@ -71,11 +70,10 @@ describe('Record class', () => {
   })
 
   test('setAtrribute curried functionality', () => {
-    let storeId: any
     let storeRecord: any
+    const storeId = store.register(testRecord)
 
-    const unSubscribe = store.subscribe(testRecord, (id: string, record: IRecord) => {
-      storeId = id
+    const unSubscribe = store.subscribe(storeId, (record: IRecord) => {
       storeRecord = record
     })
 
@@ -91,11 +89,10 @@ describe('Record class', () => {
   })
 
   test('addHasOne', () => {
-    let storeId: any
     let storeRecord: any
+    const storeId = store.register(testRecord)
 
-    const unSubscribe = store.subscribe(testRecord, (id: string, record: IRecord) => {
-      storeId = id
+    const unSubscribe = store.subscribe(storeId, (record: IRecord) => {
       storeRecord = record
     })
 
@@ -114,11 +111,10 @@ describe('Record class', () => {
   })
 
   test('addHasOne curried functionality', () => {
-    let storeId: any
     let storeRecord: any
+    const storeId = store.register(testRecord)
 
-    const unSubscribe = store.subscribe(testRecord, (id: string, record: IRecord) => {
-      storeId = id
+    const unSubscribe = store.subscribe(storeId, (record: IRecord) => {
       storeRecord = record
     })
 
@@ -137,11 +133,10 @@ describe('Record class', () => {
   })
 
   test('addHasMany', () => {
-    let storeId: any
     let storeRecord: any
+    const storeId = store.register(testRecord)
 
-    const unSubscribe = store.subscribe(testRecord, (id: string, record: IRecord) => {
-      storeId = id
+    const unSubscribe = store.subscribe(storeId, (record: IRecord) => {
       storeRecord = record
     })
 
@@ -161,11 +156,10 @@ describe('Record class', () => {
   })
 
   test('addHasMany curried functionality', () => {
-    let storeId: any
     let storeRecord: any
+    const storeId = store.register(testRecord)
 
-    const unSubscribe = store.subscribe(testRecord, (id: string, record: IRecord) => {
-      storeId = id
+    const unSubscribe = store.subscribe(storeId, (record: IRecord) => {
       storeRecord = record
     })
 
@@ -185,11 +179,10 @@ describe('Record class', () => {
   })
 
   test('removeRelationship', () => {
-    let storeId: any
     let storeRecord: any
+    const storeId = store.register(testRecord)
 
-    const unSubscribe = store.subscribe(testRecord, (id: string, record: IRecord) => {
-      storeId = id
+    const unSubscribe = store.subscribe(storeId, (record: IRecord) => {
       storeRecord = record
     })
 
@@ -205,11 +198,10 @@ describe('Record class', () => {
   })
 
   test('removeRelationship curried functionality', () => {
-    let storeId: any
     let storeRecord: any
+    const storeId = store.register(testRecord)
 
-    const unSubscribe = store.subscribe(testRecord, (id: string, record: IRecord) => {
-      storeId = id
+    const unSubscribe = store.subscribe(storeId, (record: IRecord) => {
       storeRecord = record
     })
 
@@ -225,11 +217,10 @@ describe('Record class', () => {
   })
 
   test('chaining methods', () => {
-    let storeId: any
     let storeRecord: any
+    const storeId = store.register(testRecord)
 
-    const unSubscribe = store.subscribe(testRecord, (id: string, record: IRecord) => {
-      storeId = id
+    const unSubscribe = store.subscribe(storeId, (record: IRecord) => {
       storeRecord = record
     })
 
