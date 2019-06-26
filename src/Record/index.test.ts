@@ -1,4 +1,7 @@
-import { Record } from './index'
+import { IRecord, Record } from './index'
+import { Store } from '../Store'
+import { Reducer } from '../Reducer'
+import { Dispatcher } from '../Dispatcher'
 
 const testRecord = {
   id: '12',
@@ -19,64 +22,84 @@ const testRecord = {
   }
 }
 
+const store = new Store({ dispatcher: new Dispatcher(), reducer: new Reducer() })
+
 describe('Record class', () => {
   test('record keeps reference if nothing changes', () => {
-    const record = new Record(testRecord)
+    const record = new Record(testRecord, {})
     expect(record._record).toBe(testRecord)
   })
 
   test('Getting record id', () => {
-    const record = new Record(testRecord)
+    const record = new Record(testRecord, {})
     expect(record.id).toBe('12')
   })
 
   test('Getting record type', () => {
-    const record = new Record(testRecord)
+    const record = new Record(testRecord, {})
     expect(record.type).toBe('company')
   })
 
   test('Getting attributes', () => {
-    const record = new Record(testRecord)
+    const record = new Record(testRecord, {})
     expect(record.attributes).toBe(record.attributes)
   })
 
   test('Getting relationships', () => {
-    const record = new Record(testRecord)
+    const record = new Record(testRecord, {})
     expect(record.relationships).toBe(record.relationships)
   })
 
   test('setAtrribute', () => {
-    const mockListener = jest.fn()
-    const record = new Record(testRecord)
-    record.subscribe(mockListener)
+    let storeId: any
+    let storeRecord: any
+
+    const unSubscribe = store.subscribe(testRecord, (id: string, record: IRecord) => {
+      storeId = id
+      storeRecord = record
+    })
+
+    const record = new Record(storeRecord, store.dispatcher(storeId))
 
     record.setAttribute('name', 'cloud company')
     record.setAttribute('newAttr', 'fake value')
 
-    expect(record.attributes.name).toBe('cloud company')
-    expect(record.attributes.newAttr).toBe('fake value')
-    expect(record._record).not.toBe(testRecord)
-    expect(mockListener).toBeCalledWith(record._record)
+    expect(storeRecord.attributes.name).toBe('cloud company')
+    expect(storeRecord.attributes.newAttr).toBe('fake value')
+    expect(storeRecord._record).not.toBe(testRecord)
+    unSubscribe()
   })
 
   test('setAtrribute curried functionality', () => {
-    const mockListener = jest.fn()
-    const record = new Record(testRecord)
-    record.subscribe(mockListener)
+    let storeId: any
+    let storeRecord: any
+
+    const unSubscribe = store.subscribe(testRecord, (id: string, record: IRecord) => {
+      storeId = id
+      storeRecord = record
+    })
+
+    const record = new Record(storeRecord, store.dispatcher(storeId))
 
     record.setAttribute('name')('cloud company')
     record.setAttribute('newAttr')('fake value')
 
-    expect(record.attributes.name).toBe('cloud company')
-    expect(record.attributes.newAttr).toBe('fake value')
-    expect(record._record).not.toBe(testRecord)
-    expect(mockListener).toBeCalledWith(record._record)
+    expect(storeRecord.attributes.name).toBe('cloud company')
+    expect(storeRecord.attributes.newAttr).toBe('fake value')
+    expect(storeRecord._record).not.toBe(testRecord)
+    unSubscribe()
   })
 
   test('addHasOne', () => {
-    const mockListener = jest.fn()
-    const record = new Record(testRecord)
-    record.subscribe(mockListener)
+    let storeId: any
+    let storeRecord: any
+
+    const unSubscribe = store.subscribe(testRecord, (id: string, record: IRecord) => {
+      storeId = id
+      storeRecord = record
+    })
+
+    const record = new Record(storeRecord, store.dispatcher(storeId))
 
     const newCeo = { type: 'ceo', id: '3'}
     const newRel = { type: 'newRel', id: '1' }
@@ -84,16 +107,22 @@ describe('Record class', () => {
     record.addHasOne('ceo', newCeo)
     record.addHasOne('newRel', newRel)
 
-    expect(record.relationships && record.relationships.ceo.data).toBe(newCeo)
-    expect(record.relationships && record.relationships.newRel.data).toBe(newRel)
-    expect(record._record).not.toBe(testRecord)
-    expect(mockListener).toBeCalledWith(record._record)
+    expect(storeRecord.relationships && storeRecord.relationships.ceo.data).toBe(newCeo)
+    expect(storeRecord.relationships && storeRecord.relationships.newRel.data).toBe(newRel)
+    expect(storeRecord._record).not.toBe(testRecord)
+    unSubscribe()
   })
 
   test('addHasOne curried functionality', () => {
-    const mockListener = jest.fn()
-    const record = new Record(testRecord)
-    record.subscribe(mockListener)
+    let storeId: any
+    let storeRecord: any
+
+    const unSubscribe = store.subscribe(testRecord, (id: string, record: IRecord) => {
+      storeId = id
+      storeRecord = record
+    })
+
+    const record = new Record(storeRecord, store.dispatcher(storeId))
 
     const newCeo = { type: 'ceo', id: '3'}
     const newRel = { type: 'newRel', id: '1' }
@@ -101,16 +130,22 @@ describe('Record class', () => {
     record.addHasOne('ceo')(newCeo)
     record.addHasOne('newRel')(newRel)
 
-    expect(record.relationships && record.relationships.ceo.data).toBe(newCeo)
-    expect(record.relationships && record.relationships.newRel.data).toBe(newRel)
-    expect(record._record).not.toBe(testRecord)
-    expect(mockListener).toBeCalledWith(record._record)
+    expect(storeRecord.relationships && storeRecord.relationships.ceo.data).toBe(newCeo)
+    expect(storeRecord.relationships && storeRecord.relationships.newRel.data).toBe(newRel)
+    expect(storeRecord._record).not.toBe(testRecord)
+    unSubscribe()
   })
 
   test('addHasMany', () => {
-    const mockListener = jest.fn()
-    const record = new Record(testRecord)
-    record.subscribe(mockListener)
+    let storeId: any
+    let storeRecord: any
+
+    const unSubscribe = store.subscribe(testRecord, (id: string, record: IRecord) => {
+      storeId = id
+      storeRecord = record
+    })
+
+    const record = new Record(storeRecord, store.dispatcher(storeId))
 
     const newEmployee = { type: 'employee', id: '2'}
     const newRel = { type: 'newRel', id: '1' }
@@ -118,17 +153,23 @@ describe('Record class', () => {
     record.addHasMany('employees', newEmployee)
     record.addHasMany('newRel', newRel)
 
-    expect(record.relationships && record.relationships.employees.data)
+    expect(storeRecord.relationships && storeRecord.relationships.employees.data)
        .toEqual([{ type: 'employee', id: '1' }, newEmployee])
-    expect(record.relationships && record.relationships.newRel.data).toEqual([newRel])
-    expect(record._record).not.toBe(testRecord)
-    expect(mockListener).toBeCalledWith(record._record)
+    expect(storeRecord.relationships && storeRecord.relationships.newRel.data).toEqual([newRel])
+    expect(storeRecord._record).not.toBe(testRecord)
+    unSubscribe()
   })
 
   test('addHasMany curried functionality', () => {
-    const mockListener = jest.fn()
-    const record = new Record(testRecord)
-    record.subscribe(mockListener)
+    let storeId: any
+    let storeRecord: any
+
+    const unSubscribe = store.subscribe(testRecord, (id: string, record: IRecord) => {
+      storeId = id
+      storeRecord = record
+    })
+
+    const record = new Record(storeRecord, store.dispatcher(storeId))
 
     const newEmployee = { type: 'employee', id: '2'}
     const newRel = { type: 'newRel', id: '1' }
@@ -136,45 +177,63 @@ describe('Record class', () => {
     record.addHasMany('employees')(newEmployee)
     record.addHasMany('newRel')(newRel)
 
-    expect(record.relationships && record.relationships.employees.data)
+    expect(storeRecord.relationships && storeRecord.relationships.employees.data)
        .toEqual([{ type: 'employee', id: '1' }, newEmployee])
-    expect(record.relationships && record.relationships.newRel.data).toEqual([newRel])
-    expect(record._record).not.toBe(testRecord)
-    expect(mockListener).toBeCalledWith(record._record)
+    expect(storeRecord.relationships && storeRecord.relationships.newRel.data).toEqual([newRel])
+    expect(storeRecord._record).not.toBe(testRecord)
+    unSubscribe()
   })
 
   test('removeRelationship', () => {
-    const mockListener = jest.fn()
-    const record = new Record(testRecord)
-    record.subscribe(mockListener)
+    let storeId: any
+    let storeRecord: any
+
+    const unSubscribe = store.subscribe(testRecord, (id: string, record: IRecord) => {
+      storeId = id
+      storeRecord = record
+    })
+
+    const record = new Record(storeRecord, store.dispatcher(storeId))
 
     record.removeRelationship('employees', '1')
     record.removeRelationship('ceo', '1')
 
-    expect(record.relationships && record.relationships.employees.data).toEqual([])
-    expect(record.relationships && record.relationships.ceo.data).toEqual({})
-    expect(record._record).not.toBe(testRecord)
-    expect(mockListener).toBeCalledWith(record._record)
+    expect(storeRecord.relationships && storeRecord.relationships.employees.data).toEqual([])
+    expect(storeRecord.relationships && storeRecord.relationships.ceo.data).toEqual({})
+    expect(storeRecord._record).not.toBe(testRecord)
+    unSubscribe()
   })
 
   test('removeRelationship curried functionality', () => {
-    const mockListener = jest.fn()
-    const record = new Record(testRecord)
-    record.subscribe(mockListener)
+    let storeId: any
+    let storeRecord: any
+
+    const unSubscribe = store.subscribe(testRecord, (id: string, record: IRecord) => {
+      storeId = id
+      storeRecord = record
+    })
+
+    const record = new Record(storeRecord, store.dispatcher(storeId))
 
     record.removeRelationship('employees')('1')
     record.removeRelationship('ceo')('1')
 
-    expect(record.relationships && record.relationships.employees.data).toEqual([])
-    expect(record.relationships && record.relationships.ceo.data).toEqual({})
-    expect(record._record).not.toBe(testRecord)
-    expect(mockListener).toBeCalledWith(record._record)
+    expect(storeRecord.relationships && storeRecord.relationships.employees.data).toEqual([])
+    expect(storeRecord.relationships && storeRecord.relationships.ceo.data).toEqual({})
+    expect(storeRecord._record).not.toBe(testRecord)
+    unSubscribe()
   })
 
   test('chaining methods', () => {
-    const mockListener = jest.fn()
-    const record = new Record(testRecord)
-    record.subscribe(mockListener)
+    let storeId: any
+    let storeRecord: any
+
+    const unSubscribe = store.subscribe(testRecord, (id: string, record: IRecord) => {
+      storeId = id
+      storeRecord = record
+    })
+
+    const record = new Record(storeRecord, store.dispatcher(storeId))
 
     const newCeo = { type: 'ceo', id: '3'}
     const newPhoto = { type: 'photo', id: '1'}
@@ -185,10 +244,11 @@ describe('Record class', () => {
        .addHasMany('photos', newPhoto)
        .removeRelationship('employees', '1')
 
-    expect(record.attributes.name).toBe('Michiel de Vos')
-    expect(record.relationships && record.relationships.ceo.data).toBe(newCeo)
-    expect(record.relationships && record.relationships.photos.data).toEqual([newPhoto])
-    expect(record.relationships && record.relationships.employees.data).toEqual([])
+    expect(storeRecord.attributes.name).toBe('Michiel de Vos')
+    expect(storeRecord.relationships && storeRecord.relationships.ceo.data).toBe(newCeo)
+    expect(storeRecord.relationships && storeRecord.relationships.photos.data).toEqual([newPhoto])
+    expect(storeRecord.relationships && storeRecord.relationships.employees.data).toEqual([])
+    unSubscribe()
   })
 })
 

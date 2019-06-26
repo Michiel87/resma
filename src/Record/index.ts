@@ -1,6 +1,4 @@
-import produce from 'immer'
-
-import { hasRelationship, getRelationship, removeHasMany, curryFn } from './helpers'
+import { curryFn } from './helpers'
 
 export interface RecordIdentifier {
   id?: string
@@ -21,24 +19,13 @@ type Relationship = string
 type RelatedId = string
 type Value = any
 
-export type Listener = null|((record: IRecord) => void)
-
 export class Record {
   _record: IRecord
-  _listener: Listener
+  _dispatcher: any
   
-  constructor (record: IRecord) {
-    this._listener = null
+  constructor (record: IRecord, dispatcher: any) {
     this._record = record
-  }
-
-  subscribe (listener: Listener) {
-    this._listener = listener
-    const self = this
-
-    return function unSubscribe () {
-      self._listener = null
-    }
+    this._dispatcher = dispatcher
   }
 
   get id () {
@@ -59,68 +46,28 @@ export class Record {
 
   setAttribute (...args: Array<Attribute|Value>) {
     return curryFn((attribute: string, value: any): this => {
-      this._record = produce(this._record, draft => {
-        draft.attributes[attribute] = value
-      })
-
-      this._listener && this._listener && this._listener(this._record)
+      this._dispatcher.setAttribute(attribute, value)
       return this
     })(...args)
   }
 
   addHasOne (...args: Array<Relationship|RecordIdentifier>) {
     return curryFn((relationship: string, recordIdentifier: RecordIdentifier): this => {
-      this._record = produce<IRecord, void, IRecord>(this._record, draft => {
-        if (hasRelationship.call(draft, relationship)) {
-          draft.relationships![relationship].data = recordIdentifier
-        } else if (draft.relationships) {
-          draft.relationships[relationship] = { data: recordIdentifier }
-        } else {
-          draft.relationships = {
-            [relationship]: {
-              data: recordIdentifier
-            }
-          }
-        }
-      })
-
-      this._listener && this._listener(this._record)
+      this._dispatcher.addHasOne(relationship, recordIdentifier)
       return this
     })(...args)
   }
 
   addHasMany (...args: Array<Relationship|RecordIdentifier>) {
     return curryFn((relationship: string, recordIdentifier: RecordIdentifier): this => {
-      this._record = produce<IRecord, void, IRecord>(this._record, draft => {
-        if (hasRelationship.call(draft, relationship)) {
-          draft.relationships![relationship].data.push(recordIdentifier)
-        } else if (draft.relationships) {
-          draft.relationships[relationship] = { data: [ recordIdentifier ] }
-        } else {
-          draft.relationships = {
-            [relationship]: {
-              data: [ recordIdentifier ]
-            }
-          }
-        }
-      })
-
-      this._listener && this._listener(this._record)
+      this._dispatcher.addHasMany(relationship, recordIdentifier)
       return this
     })(...args)
   }
 
   removeRelationship (...args: Array<Relationship|RelatedId>) {
     return curryFn((relationship: string, relatedId: string) => {
-      this._record = produce<IRecord, void, IRecord>(this._record, draft => {
-        if (hasRelationship.call(draft, relationship)) {
-          draft.relationships![relationship].data = Array.isArray(getRelationship.call(draft, relationship))
-             ? removeHasMany.call(draft, relationship, relatedId)
-             : {}
-        }
-      })
-
-      this._listener && this._listener(this._record)
+      this._dispatcher.removeRelationship(relationship, relatedId)
       return this
     })(...args)
   }
