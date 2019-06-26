@@ -26,6 +26,11 @@ export class Record {
   constructor (record: IRecord, dispatcher: any) {
     this._record = record
     this._dispatcher = dispatcher
+
+    this.setAttribute = this.setAttribute.bind(this)
+    this.addHasOne = this.addHasOne.bind(this)
+    this.addHasMany = this.addHasMany.bind(this)
+    this.removeRelationship = this.removeRelationship.bind(this)
   }
 
   get id () {
