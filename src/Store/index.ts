@@ -24,6 +24,8 @@ export class Store {
     this._store = options.store || {}
     this._subscriptions = {}
     this._uId = options.startId || 0
+
+    this.storeReducer = this.storeReducer.bind(this)
   }
 
   register (record: IRecord): number {
