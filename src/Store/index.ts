@@ -25,6 +25,10 @@ export class Store {
     this._subscriptions = {}
     this._uId = options.startId || 0
 
+    this.register = this.register.bind(this)
+    this.subscribe = this.subscribe.bind(this)
+    this.unSubscribe = this.unSubscribe.bind(this)
+    this.dispatcher = this.dispatcher.bind(this)
     this.storeReducer = this.storeReducer.bind(this)
   }
 
