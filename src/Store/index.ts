@@ -2,14 +2,19 @@ import { IRecord } from '../Record'
 import { Dispatcher } from '../Dispatcher'
 import { Reducer } from '../Reducer'
 
+
 export interface StoreProps {
   dispatcher: Dispatcher
   reducer: Reducer
   options?: {
     startId? : number
-    store?: object
+    store?: {
+      [key: number]: IRecord
+    }
   }
 }
+
+export type Subscription = (record: IRecord) => void
 
 export class Store {
   _dispatcher: Dispatcher
@@ -24,12 +29,6 @@ export class Store {
     this._store = options.store || {}
     this._subscriptions = {}
     this._uId = options.startId || 0
-
-    this.register = this.register.bind(this)
-    this.subscribe = this.subscribe.bind(this)
-    this.unSubscribe = this.unSubscribe.bind(this)
-    this.dispatcher = this.dispatcher.bind(this)
-    this.storeReducer = this.storeReducer.bind(this)
   }
 
   register (record: IRecord): number {
@@ -39,14 +38,10 @@ export class Store {
     return id
   }
 
-  subscribe (id: number, subscription: any) {
-    const self = this
+  subscribe (id: number, subscription: Subscription): () => void {
     this._subscriptions[id] = subscription
 
-    return function unSubscribe () {
-      delete self._subscriptions[id]
-      delete self._store[id]
-    }
+    return () => this.unSubscribe(id)
   }
 
   unSubscribe (id: number) {
@@ -66,7 +61,6 @@ export class Store {
       const newRecordState = self._reducer.reduce(record, action)
 
       self._store[id] = newRecordState
-      // @todo validate if listener ref stays the same
       self._subscriptions[id](newRecordState)
     }
   }

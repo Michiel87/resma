@@ -24,29 +24,36 @@ const testRecord = {
 
 const store = new Store({ dispatcher: new Dispatcher(), reducer: new Reducer() })
 
+const fakeDispatcher = {
+  setAttribute: () => {},
+  addHasOne: () => {},
+  addHasMany: () => {},
+  removeRelationship: () => {}
+}
+
 describe('Record class', () => {
   test('record keeps reference if nothing changes', () => {
-    const record = new Record(testRecord, {})
+    const record = new Record(testRecord, fakeDispatcher)
     expect(record._record).toBe(testRecord)
   })
 
   test('Getting record id', () => {
-    const record = new Record(testRecord, {})
+    const record = new Record(testRecord, fakeDispatcher)
     expect(record.id).toBe('12')
   })
 
   test('Getting record type', () => {
-    const record = new Record(testRecord, {})
+    const record = new Record(testRecord, fakeDispatcher)
     expect(record.type).toBe('company')
   })
 
   test('Getting attributes', () => {
-    const record = new Record(testRecord, {})
+    const record = new Record(testRecord, fakeDispatcher)
     expect(record.attributes).toBe(record.attributes)
   })
 
   test('Getting relationships', () => {
-    const record = new Record(testRecord, {})
+    const record = new Record(testRecord, fakeDispatcher)
     expect(record.relationships).toBe(record.relationships)
   })
 

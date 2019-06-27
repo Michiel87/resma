@@ -1,18 +1,18 @@
 import produce from "immer"
 
 import { IRecord } from '../Record'
-import { TYPES } from '../Dispatcher/types'
 import { getRelationship, hasRelationship, removeHasMany } from '../Record/helpers'
+import { ActionTypes, SET_ATTRIBUTE, ADD_HAS_ONE, ADD_HAS_MANY, REMOVE_RELATIONSHIP } from '../Dispatcher'
 
 export class Reducer {
-  reduce (record: IRecord, action: any) {
+  reduce (record: IRecord, action: ActionTypes) {
     return produce(record, draft => {
       switch (action.type) {
-        case TYPES.SET_ATTRIBUTE:
+        case SET_ATTRIBUTE:
           draft.attributes[action.attribute] = action.value
           break
 
-        case TYPES.ADD_HAS_ONE:
+        case ADD_HAS_ONE:
           if (hasRelationship.call(draft, action.relationship)) {
             draft.relationships![action.relationship].data = action.recordIdentifier
           } else if (draft.relationships) {
@@ -26,7 +26,7 @@ export class Reducer {
           }
           break
 
-        case TYPES.ADD_HAS_MANY:
+        case ADD_HAS_MANY:
           if (hasRelationship.call(draft, action.relationship)) {
             draft.relationships![action.relationship].data.push(action.recordIdentifier)
           } else if (draft.relationships) {
@@ -40,7 +40,7 @@ export class Reducer {
           }
           break
 
-        case TYPES.REMOVE_RELATIONSHIP:
+        case REMOVE_RELATIONSHIP:
           if (hasRelationship.call(draft, action.relationship)) {
             draft.relationships![action.relationship].data = Array.isArray(getRelationship.call(draft, action.relationship))
                ? removeHasMany.call(draft, action.relationship, action.relatedId)

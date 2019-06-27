@@ -1,33 +1,35 @@
 import { RecordIdentifier } from '../Record'
-import { TYPES } from './types'
+import { ActionPayload, ActionType, ActionTypes, SET_ATTRIBUTE, ADD_HAS_ONE, ADD_HAS_MANY, REMOVE_RELATIONSHIP } from './types'
+
+export type ReducerFunction<T> = (action: ActionType & ActionPayload<T>) => void
 
 export class Dispatcher {
-  create (reducer: any) {
+  create (reducer: ReducerFunction<ActionTypes>) {
     return {
       setAttribute (attribute: string, value: any): void {
         reducer({
-          type: TYPES.SET_ATTRIBUTE,
+          type: SET_ATTRIBUTE,
           attribute,
           value
         })
       },
       addHasOne (relationship: string, recordIdentifier: RecordIdentifier): void {
         reducer({
-          type: TYPES.ADD_HAS_ONE,
+          type: ADD_HAS_ONE,
           relationship,
           recordIdentifier
         })
       },
       addHasMany (relationship: string, recordIdentifier: RecordIdentifier): void  {
         reducer({
-          type: TYPES.ADD_HAS_MANY,
+          type: ADD_HAS_MANY,
           relationship,
           recordIdentifier
         })
       },
       removeRelationship (relationship: string, relatedId: string) {
         reducer({
-          type: TYPES.REMOVE_RELATIONSHIP,
+          type: REMOVE_RELATIONSHIP,
           relationship,
           relatedId
         })
@@ -35,3 +37,5 @@ export class Dispatcher {
     }
   }
 }
+
+export { ActionPayload, ActionType, ActionTypes, SET_ATTRIBUTE, ADD_HAS_ONE, ADD_HAS_MANY, REMOVE_RELATIONSHIP }

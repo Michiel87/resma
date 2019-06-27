@@ -1,4 +1,5 @@
 import { curryFn } from './helpers'
+import { Dispatcher } from '../Dispatcher'
 
 export interface RecordIdentifier {
   id?: string
@@ -21,16 +22,11 @@ type Value = any
 
 export class Record {
   _record: IRecord
-  _dispatcher: any
+  _dispatcher: ReturnType<Dispatcher['create']>
   
-  constructor (record: IRecord, dispatcher: any) {
+  constructor (record: IRecord, dispatcher: ReturnType<Dispatcher['create']>) {
     this._record = record
     this._dispatcher = dispatcher
-
-    this.setAttribute = this.setAttribute.bind(this)
-    this.addHasOne = this.addHasOne.bind(this)
-    this.addHasMany = this.addHasMany.bind(this)
-    this.removeRelationship = this.removeRelationship.bind(this)
   }
 
   get id () {
