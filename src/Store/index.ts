@@ -38,6 +38,10 @@ export class Store {
     return id
   }
 
+  getRecord (id: number) {
+    return this._store[id]
+  }
+
   subscribe (id: number, subscription: Subscription): () => void {
     this._subscriptions[id] = subscription
 
