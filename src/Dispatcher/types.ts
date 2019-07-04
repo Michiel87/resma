@@ -1,4 +1,4 @@
-import { RecordIdentifier } from '../Record'
+import { RecordIdentifier } from '../Record/types'
 
 export const SET_ATTRIBUTE = 'SET_ATTRIBUTE'
 export const ADD_HAS_ONE = 'ADD_HAS_ONE'

@@ -1,32 +1,41 @@
-import { curryFn } from './helpers'
 import { Dispatcher } from '../Dispatcher'
 
-export interface RecordIdentifier {
-  id?: string
-  type: string
-}
+import { IRecord, DispatcherType } from './types'
 
-export interface IRecord extends RecordIdentifier {
-  attributes: {
-    [key: string]: any
-  }
-  relationships?: {
-    [key: string]: any
-  }
-}
-
-type Attribute = string
-type Relationship = string
-type RelatedId = string
-type Value = any
-
-export class Record {
-  _record: IRecord
-  _dispatcher: ReturnType<Dispatcher['create']>
+export class Record<D> {
+  private _record: IRecord
+  private _dispatcher: DispatcherType<D>
+  public setAttribute: ReturnType<DispatcherType<D>['setAttribute']>
+  public addHasOne: ReturnType<DispatcherType<D>['addHasOne']>
+  public addHasMany: ReturnType<DispatcherType<D>['addHasMany']>
+  public removeRelationship: ReturnType<DispatcherType<D>['removeRelationship']>
+  public reset: ReturnType<DispatcherType<D>['reset']>
+  public resetAttributes: ReturnType<DispatcherType<D>['resetAttributes']>
   
-  constructor (record: IRecord, dispatcher: ReturnType<Dispatcher['create']>) {
+  constructor (record: IRecord, dispatcher: DispatcherType<D>) {
     this._record = record
     this._dispatcher = dispatcher
+
+    this.setAttribute = this._dispatcher.setAttribute
+      .bind(this) as ReturnType<DispatcherType<D>['setAttribute']>
+
+    this.addHasOne = this._dispatcher.addHasOne
+      .bind(this) as ReturnType<DispatcherType<D>['addHasOne']>
+
+    this.addHasMany = this._dispatcher.addHasMany
+      .bind(this) as ReturnType<DispatcherType<D>['addHasMany']>
+
+    this.removeRelationship = this._dispatcher.removeRelationship
+      .bind(this) as ReturnType<DispatcherType<D>['removeRelationship']>
+
+    this.reset = this._dispatcher.reset
+      .bind(this) as ReturnType<DispatcherType<D>['reset']>
+
+    this.resetAttributes = this._dispatcher.resetAttributes
+      .bind(this) as ReturnType<DispatcherType<D>['resetAttributes']>
+
+    this.resetRelationships = this._dispatcher.resetRelationships
+      .bind(this) as ReturnType<DispatcherType<D>['resetRelationships']>
   }
 
   get id () {
@@ -45,31 +54,22 @@ export class Record {
     return this._record.relationships
   }
 
-  setAttribute (...args: Array<Attribute|Value>) {
-    return curryFn((attribute: string, value: any): this => {
-      this._dispatcher.setAttribute(attribute, value)
-      return this
-    })(...args)
-  }
-
-  addHasOne (...args: Array<Relationship|RecordIdentifier>) {
-    return curryFn((relationship: string, recordIdentifier: RecordIdentifier): this => {
-      this._dispatcher.addHasOne(relationship, recordIdentifier)
-      return this
-    })(...args)
-  }
-
-  addHasMany (...args: Array<Relationship|RecordIdentifier>) {
-    return curryFn((relationship: string, recordIdentifier: RecordIdentifier): this => {
-      this._dispatcher.addHasMany(relationship, recordIdentifier)
-      return this
-    })(...args)
-  }
-
-  removeRelationship (...args: Array<Relationship|RelatedId>) {
-    return curryFn((relationship: string, relatedId: string) => {
-      this._dispatcher.removeRelationship(relationship, relatedId)
-      return this
-    })(...args)
+  getRecord () {
+    return this._record
   }
 }
+
+const rec = {
+  type: 'budget',
+  attributes: {
+    name: 'michiel'
+  }
+}
+
+// // @ts-ignore
+// const record = new Record<ReturnType<Dispatcher['create']>>(rec, new Dispatcher().create((action) => ({})))
+
+// const hal = record.setAttribute('string is een mooie')(123)
+
+
+

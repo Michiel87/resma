@@ -1,4 +1,5 @@
-import { IRecord, Record } from './index'
+import { Record } from './index'
+import { IRecord } from './types'
 import { Store } from '../Store'
 import { Reducer } from '../Reducer'
 import { Dispatcher } from '../Dispatcher'
@@ -22,19 +23,16 @@ const testRecord = {
   }
 }
 
-const store = new Store({ dispatcher: new Dispatcher(), reducer: new Reducer() })
+const dispatcher = new Dispatcher()
 
-const fakeDispatcher = {
-  setAttribute: () => {},
-  addHasOne: () => {},
-  addHasMany: () => {},
-  removeRelationship: () => {}
-}
+const store = new Store({ dispatcher, reducer: new Reducer() })
+
+const fakeDispatcher = dispatcher.create(() => ({}))
 
 describe('Record class', () => {
   test('record keeps reference if nothing changes', () => {
     const record = new Record(testRecord, fakeDispatcher)
-    expect(record._record).toBe(testRecord)
+    expect(record.getRecord()).toBe(testRecord)
   })
 
   test('Getting record id', () => {
@@ -238,9 +236,9 @@ describe('Record class', () => {
 
     record
        .setAttribute('name', 'Michiel de Vos')
-       .addHasOne('ceo', newCeo)
-       .addHasMany('photos', newPhoto)
-       .removeRelationship('employees', '1')
+      //  .addHasOne('ceo', newCeo)
+      //  .addHasMany('photos', newPhoto)
+      //  .removeRelationship('employees', '1')
 
     expect(storeRecord.attributes.name).toBe('Michiel de Vos')
     expect(storeRecord.relationships && storeRecord.relationships.ceo.data).toBe(newCeo)

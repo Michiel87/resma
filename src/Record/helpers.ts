@@ -1,4 +1,4 @@
-import { IRecord, RecordIdentifier } from './'
+import { IRecord, RecordIdentifier } from './types'
 
 export function hasRelationship (this: IRecord, relationship: string): boolean {
     return !!this.relationships && this.relationships.hasOwnProperty(relationship)

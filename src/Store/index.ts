@@ -1,4 +1,4 @@
-import { IRecord } from '../Record'
+import { IRecord } from '../Record/types'
 import { Dispatcher } from '../Dispatcher'
 import { Reducer } from '../Reducer'
 
