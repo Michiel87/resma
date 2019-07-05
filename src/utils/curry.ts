@@ -1,6 +1,6 @@
 import R from 'ramda'
 
-export declare function curry<F extends (...args: any) => any>(f: F): Curry<F>
+// export declare function curry<F extends (...args: any) => any>(f: F): Curry<F>
 
 export type __ = typeof R.__
 

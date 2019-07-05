@@ -236,9 +236,9 @@ describe('Record class', () => {
 
     record
        .setAttribute('name', 'Michiel de Vos')
-      //  .addHasOne('ceo', newCeo)
-      //  .addHasMany('photos', newPhoto)
-      //  .removeRelationship('employees', '1')
+       .addHasOne('ceo', newCeo)
+       .addHasMany('photos', newPhoto)
+       .removeRelationship('employees', '1')
 
     expect(storeRecord.attributes.name).toBe('Michiel de Vos')
     expect(storeRecord.relationships && storeRecord.relationships.ceo.data).toBe(newCeo)

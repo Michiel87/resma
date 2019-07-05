@@ -1,3 +1,5 @@
+import { Dispatcher } from '../Dispatcher'
+
 import { IRecord, Dispatchers, DispatcherFactory } from './types'
 
 export class Record<D> {
@@ -58,5 +60,4 @@ export class Record<D> {
     return this._record
   }
 }
-
 export * from './types'

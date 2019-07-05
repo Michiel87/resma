@@ -1,6 +1,7 @@
 import { ActionPayload, ActionType, ActionTypes, SET_ATTRIBUTE, ADD_HAS_ONE, ADD_HAS_MANY, REMOVE_RELATIONSHIP } from './types'
 import { RecordIdentifier} from '../Record/types'
-import { curry, Curry } from '../utils/curry'
+import { Curry } from '../utils/curry'
+import { curry } from 'ramda'
 import { Record } from '../Record'
 
 export type ReducerFunction<T> = (action: ActionType & ActionPayload<T>) => void
