@@ -27,7 +27,7 @@ const dispatcher = new Dispatcher()
 
 const store = new Store({ dispatcher, reducer: new Reducer() })
 
-const fakeDispatcher = dispatcher.create(() => ({}))
+const fakeDispatcher = dispatcher
 
 describe('Record class', () => {
   test('record keeps reference if nothing changes', () => {
@@ -63,7 +63,7 @@ describe('Record class', () => {
       storeRecord = record
     })
 
-    const record = new Record(storeRecord, store.dispatcher(storeId))
+    const record = new Record(storeRecord, store.getDispatcherFactory(storeId))
 
     record.setAttribute('name', 'cloud company')
     record.setAttribute('newAttr', 'fake value')
@@ -82,7 +82,7 @@ describe('Record class', () => {
       storeRecord = record
     })
 
-    const record = new Record(storeRecord, store.dispatcher(storeId))
+    const record = new Record(storeRecord, store.getDispatcherFactory(storeId))
 
     record.setAttribute('name')('cloud company')
     record.setAttribute('newAttr')('fake value')
@@ -101,7 +101,7 @@ describe('Record class', () => {
       storeRecord = record
     })
 
-    const record = new Record(storeRecord, store.dispatcher(storeId))
+    const record = new Record(storeRecord, store.getDispatcherFactory(storeId))
 
     const newCeo = { type: 'ceo', id: '3'}
     const newRel = { type: 'newRel', id: '1' }
@@ -123,7 +123,7 @@ describe('Record class', () => {
       storeRecord = record
     })
 
-    const record = new Record(storeRecord, store.dispatcher(storeId))
+    const record = new Record(storeRecord, store.getDispatcherFactory(storeId))
 
     const newCeo = { type: 'ceo', id: '3'}
     const newRel = { type: 'newRel', id: '1' }
@@ -145,7 +145,7 @@ describe('Record class', () => {
       storeRecord = record
     })
 
-    const record = new Record(storeRecord, store.dispatcher(storeId))
+    const record = new Record(storeRecord, store.getDispatcherFactory(storeId))
 
     const newEmployee = { type: 'employee', id: '2'}
     const newRel = { type: 'newRel', id: '1' }
@@ -168,7 +168,7 @@ describe('Record class', () => {
       storeRecord = record
     })
 
-    const record = new Record(storeRecord, store.dispatcher(storeId))
+    const record = new Record(storeRecord, store.getDispatcherFactory(storeId))
 
     const newEmployee = { type: 'employee', id: '2'}
     const newRel = { type: 'newRel', id: '1' }
@@ -191,7 +191,7 @@ describe('Record class', () => {
       storeRecord = record
     })
 
-    const record = new Record(storeRecord, store.dispatcher(storeId))
+    const record = new Record(storeRecord, store.getDispatcherFactory(storeId))
 
     record.removeRelationship('employees', '1')
     record.removeRelationship('ceo', '1')
@@ -210,7 +210,7 @@ describe('Record class', () => {
       storeRecord = record
     })
 
-    const record = new Record(storeRecord, store.dispatcher(storeId))
+    const record = new Record(storeRecord, store.getDispatcherFactory(storeId))
 
     record.removeRelationship('employees')('1')
     record.removeRelationship('ceo')('1')
@@ -229,7 +229,7 @@ describe('Record class', () => {
       storeRecord = record
     })
 
-    const record = new Record(storeRecord, store.dispatcher(storeId))
+    const record = new Record(storeRecord, store.getDispatcherFactory(storeId))
 
     const newCeo = { type: 'ceo', id: '3'}
     const newPhoto = { type: 'photo', id: '1'}

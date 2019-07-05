@@ -27,4 +27,8 @@ interface DispatcherMethods {
   resetRelationships (...args: any): any
 }
 
-export type DispatcherType<D> = DispatcherMethods & D
+export type DispatcherFactory<D> = {
+  create(context: object): Dispatchers<D>
+}
+
+export type Dispatchers<D> = DispatcherMethods & D

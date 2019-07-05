@@ -1,41 +1,41 @@
-import { Dispatcher } from '../Dispatcher'
-
-import { IRecord, DispatcherType } from './types'
+import { IRecord, Dispatchers, DispatcherFactory } from './types'
 
 export class Record<D> {
-  private _record: IRecord
-  private _dispatcher: DispatcherType<D>
-  public setAttribute: ReturnType<DispatcherType<D>['setAttribute']>
-  public addHasOne: ReturnType<DispatcherType<D>['addHasOne']>
-  public addHasMany: ReturnType<DispatcherType<D>['addHasMany']>
-  public removeRelationship: ReturnType<DispatcherType<D>['removeRelationship']>
-  public reset: ReturnType<DispatcherType<D>['reset']>
-  public resetAttributes: ReturnType<DispatcherType<D>['resetAttributes']>
+  _record: IRecord
+  _dispatchers: Dispatchers<D>
+
+  setAttribute: ReturnType<Dispatchers<D>['setAttribute']>
+  addHasOne: ReturnType<Dispatchers<D>['addHasOne']>
+  addHasMany: ReturnType<Dispatchers<D>['addHasMany']>
+  removeRelationship: ReturnType<Dispatchers<D>['removeRelationship']>
+  reset: ReturnType<Dispatchers<D>['reset']>
+  resetAttributes: ReturnType<Dispatchers<D>['resetAttributes']>
+  resetRelationships: ReturnType<Dispatchers<D>['resetRelationships']>
   
-  constructor (record: IRecord, dispatcher: DispatcherType<D>) {
+  constructor (record: IRecord, dispatchers: DispatcherFactory<D>) {
     this._record = record
-    this._dispatcher = dispatcher
+    this._dispatchers = dispatchers.create(this)
 
-    this.setAttribute = this._dispatcher.setAttribute
-      .bind(this) as ReturnType<DispatcherType<D>['setAttribute']>
+    this.setAttribute = this._dispatchers.setAttribute
+      .bind(this) as ReturnType<Dispatchers<D>['setAttribute']>
 
-    this.addHasOne = this._dispatcher.addHasOne
-      .bind(this) as ReturnType<DispatcherType<D>['addHasOne']>
+    this.addHasOne = this._dispatchers.addHasOne
+      .bind(this) as ReturnType<Dispatchers<D>['addHasOne']>
 
-    this.addHasMany = this._dispatcher.addHasMany
-      .bind(this) as ReturnType<DispatcherType<D>['addHasMany']>
+    this.addHasMany = this._dispatchers.addHasMany
+      .bind(this) as ReturnType<Dispatchers<D>['addHasMany']>
 
-    this.removeRelationship = this._dispatcher.removeRelationship
-      .bind(this) as ReturnType<DispatcherType<D>['removeRelationship']>
+    this.removeRelationship = this._dispatchers.removeRelationship
+      .bind(this) as ReturnType<Dispatchers<D>['removeRelationship']>
 
-    this.reset = this._dispatcher.reset
-      .bind(this) as ReturnType<DispatcherType<D>['reset']>
+    this.reset = this._dispatchers.reset
+      .bind(this) as ReturnType<Dispatchers<D>['reset']>
 
-    this.resetAttributes = this._dispatcher.resetAttributes
-      .bind(this) as ReturnType<DispatcherType<D>['resetAttributes']>
+    this.resetAttributes = this._dispatchers.resetAttributes
+      .bind(this) as ReturnType<Dispatchers<D>['resetAttributes']>
 
-    this.resetRelationships = this._dispatcher.resetRelationships
-      .bind(this) as ReturnType<DispatcherType<D>['resetRelationships']>
+    this.resetRelationships = this._dispatchers.resetRelationships
+      .bind(this) as ReturnType<Dispatchers<D>['resetRelationships']>
   }
 
   get id () {
@@ -58,18 +58,3 @@ export class Record<D> {
     return this._record
   }
 }
-
-const rec = {
-  type: 'budget',
-  attributes: {
-    name: 'michiel'
-  }
-}
-
-// // @ts-ignore
-// const record = new Record<ReturnType<Dispatcher['create']>>(rec, new Dispatcher().create((action) => ({})))
-
-// const hal = record.setAttribute('string is een mooie')(123)
-
-
-

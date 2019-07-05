@@ -1,12 +1,22 @@
 import { ActionPayload, ActionType, ActionTypes, SET_ATTRIBUTE, ADD_HAS_ONE, ADD_HAS_MANY, REMOVE_RELATIONSHIP } from './types'
 import { RecordIdentifier} from '../Record/types'
-import { curry } from '../utils/curry'
-
+import { curry, Curry } from '../utils/curry'
+import { Record } from '../Record'
 
 export type ReducerFunction<T> = (action: ActionType & ActionPayload<T>) => void
 
+export type CurriedDispatchers = {
+  setAttribute: Curry<(attribute: string, value: any) => Record<CurriedDispatchers>>,
+  addHasOne: Curry<(relationship: string, recordIdentifier: RecordIdentifier) => Record<CurriedDispatchers>>,
+  addHasMany: Curry<(relationship: string, recordIdentifier: RecordIdentifier) => Record<CurriedDispatchers>>,
+  removeRelationship: Curry<(relationship: string, relatedId: string) => Record<CurriedDispatchers>>,
+  reset: (attribute: string, value: any) => Record<CurriedDispatchers>,
+  resetAttributes: (attributes: string|string[]) => Record<CurriedDispatchers>,
+  resetRelationships: (relationships: string|string[]) => Record<CurriedDispatchers>
+}
+
 export class Dispatcher {
-  create (reducer: ReducerFunction<ActionTypes>) {
+  create (this: Record<CurriedDispatchers>, reducer: ReducerFunction<ActionTypes>) {
     return {
       setAttribute: curry((attribute: string, value: any) => {
         reducer({
@@ -14,6 +24,8 @@ export class Dispatcher {
           attribute,
           value
         })
+
+        return this
       }),
       addHasOne: curry((relationship: string, recordIdentifier: RecordIdentifier) => {
         reducer({
@@ -21,6 +33,8 @@ export class Dispatcher {
           relationship,
           recordIdentifier
         })
+
+        return this
       }),
       addHasMany: curry((relationship: string, recordIdentifier: RecordIdentifier) => {
         reducer({
@@ -28,6 +42,8 @@ export class Dispatcher {
           relationship,
           recordIdentifier
         })
+
+        return this
       }),
       removeRelationship: curry((relationship: string, relatedId: string) => {
         reducer({
@@ -35,6 +51,8 @@ export class Dispatcher {
           relationship,
           relatedId
         })
+
+        return this
       }),
       reset () {
         return this
@@ -50,11 +68,3 @@ export class Dispatcher {
 }
 
 export { ActionPayload, ActionType, ActionTypes, SET_ATTRIBUTE, ADD_HAS_ONE, ADD_HAS_MANY, REMOVE_RELATIONSHIP }
-
-let ho
-
-if (typeof curry === 'function') {
-  ho = 10
-} else {
-  ho = 11
-}

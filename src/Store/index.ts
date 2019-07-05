@@ -2,7 +2,6 @@ import { IRecord } from '../Record/types'
 import { Dispatcher } from '../Dispatcher'
 import { Reducer } from '../Reducer'
 
-
 export interface StoreProps {
   dispatcher: Dispatcher
   reducer: Reducer
@@ -16,6 +15,7 @@ export interface StoreProps {
 
 export type Subscription = (record: IRecord) => void
 
+// @todo create separate Dispatcher type
 export class Store {
   _dispatcher: Dispatcher
   _reducer: Reducer
@@ -53,8 +53,14 @@ export class Store {
     delete this._store[id]
   }
 
-  dispatcher (storeId: number) {
-    return this._dispatcher.create(this.storeReducer(storeId))
+  getDispatcherFactory (storeId: number) {
+    const self = this
+
+    return {
+      create: function (context: any) {
+        return self._dispatcher.create.call(context, self.storeReducer(storeId))
+      }
+    }
   }
 
   storeReducer (id: number) {
