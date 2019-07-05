@@ -1,6 +1,6 @@
 {
   "name": "resma",
-  "version": "0.0.26",
+  "version": "0.0.27",
   "description": "Record state manager according to json:api specs",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -11,13 +11,13 @@
   "author": "Michiel de Vos <Michiel_87@hotmail.com>",
   "license": "ISC",
   "dependencies": {
-    "immer": "^2.1.5"
+    "immer": "^2.1.5",
+    "ramda": "^0.26.1"
   },
   "devDependencies": {
     "@types/jest": "^24.0.11",
     "@types/ramda": "^0.26.14",
     "jest": "^24.7.1",
-    "ramda": "^0.26.1",
     "ts-jest": "^24.0.2",
     "typescript": "^3.5.2"
   }
