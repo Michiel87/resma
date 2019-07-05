@@ -1,7 +1,5 @@
 import R from 'ramda'
 
-// export declare function curry<F extends (...args: any) => any>(f: F): Curry<F>
-
 export type __ = typeof R.__
 
 export type Head<T extends any[]> = T extends [any, ...any[]] ? T[0] : never

@@ -1,7 +1,6 @@
-import { Dispatcher } from '../Dispatcher'
-
 import { IRecord, Dispatchers, DispatcherFactory } from './types'
 
+// @todo Improve typings methods - make them dynamic and provide specified record types
 export class Record<D> {
   _record: IRecord
   _dispatchers: Dispatchers<D>
@@ -10,9 +9,9 @@ export class Record<D> {
   addHasOne: ReturnType<Dispatchers<D>['addHasOne']>
   addHasMany: ReturnType<Dispatchers<D>['addHasMany']>
   removeRelationship: ReturnType<Dispatchers<D>['removeRelationship']>
-  reset: ReturnType<Dispatchers<D>['reset']>
-  resetAttributes: ReturnType<Dispatchers<D>['resetAttributes']>
-  resetRelationships: ReturnType<Dispatchers<D>['resetRelationships']>
+  reset: Dispatchers<D>['reset']
+  resetAttributes: Dispatchers<D>['resetAttributes']
+  resetRelationships: Dispatchers<D>['resetRelationships']
   
   constructor (record: IRecord, dispatchers: DispatcherFactory<D>) {
     this._record = record
@@ -31,13 +30,13 @@ export class Record<D> {
       .bind(this) as ReturnType<Dispatchers<D>['removeRelationship']>
 
     this.reset = this._dispatchers.reset
-      .bind(this) as ReturnType<Dispatchers<D>['reset']>
+      .bind(this) as Dispatchers<D>['reset']
 
     this.resetAttributes = this._dispatchers.resetAttributes
-      .bind(this) as ReturnType<Dispatchers<D>['resetAttributes']>
+      .bind(this) as Dispatchers<D>['resetAttributes']
 
     this.resetRelationships = this._dispatchers.resetRelationships
-      .bind(this) as ReturnType<Dispatchers<D>['resetRelationships']>
+      .bind(this) as Dispatchers<D>['resetRelationships']
   }
 
   get id () {
@@ -60,4 +59,5 @@ export class Record<D> {
     return this._record
   }
 }
+
 export * from './types'

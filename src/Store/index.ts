@@ -20,6 +20,7 @@ export class Store {
   _dispatcher: Dispatcher
   _reducer: Reducer
   _store: any
+  _initialStateStore: any
   _subscriptions: any
   _uId: number
 
@@ -27,6 +28,7 @@ export class Store {
     this._dispatcher = dispatcher
     this._reducer = reducer
     this._store = options.store || {}
+    this._initialStateStore = options.store || {}
     this._subscriptions = {}
     this._uId = options.startId || 0
   }
@@ -34,6 +36,7 @@ export class Store {
   register (record: IRecord): number {
     const id = this._uId++
     this._store[id] = record
+    this._initialStateStore[id] = record 
 
     return id
   }
@@ -51,6 +54,7 @@ export class Store {
   unSubscribe (id: number) {
     delete this._subscriptions[id]
     delete this._store[id]
+    delete this._initialStateStore[id]
   }
 
   getDispatcherFactory (storeId: number) {
@@ -68,7 +72,8 @@ export class Store {
 
     return function reducer (action: any) {
       const record = self._store[id]
-      const newRecordState = self._reducer.reduce(record, action)
+      const initialState = self._initialStateStore[id]
+      const newRecordState = self._reducer.reduce({ record, initialState }, action)
 
       self._store[id] = newRecordState
       self._subscriptions[id](newRecordState)

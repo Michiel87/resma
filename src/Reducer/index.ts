@@ -2,10 +2,25 @@ import produce from "immer"
 
 import { IRecord } from '../Record/types'
 import { getRelationship, hasRelationship, removeHasMany } from '../Record/helpers'
-import { ActionTypes, SET_ATTRIBUTE, ADD_HAS_ONE, ADD_HAS_MANY, REMOVE_RELATIONSHIP } from '../Dispatcher'
+
+import { 
+  ActionTypes, 
+  SET_ATTRIBUTE, 
+  ADD_HAS_ONE, 
+  ADD_HAS_MANY, 
+  REMOVE_RELATIONSHIP, 
+  RESET, 
+  RESET_ATTRIBUTES, 
+  RESET_RELATIONSHIPS 
+} from '../Dispatcher'
+
+type ReduceRecord = {
+  record: IRecord,
+  initialState: IRecord
+}
 
 export class Reducer {
-  reduce (record: IRecord, action: ActionTypes) {
+  reduce ({ record, initialState }: ReduceRecord, action: ActionTypes) {
     return produce(record, draft => {
       switch (action.type) {
         case SET_ATTRIBUTE:
@@ -46,6 +61,50 @@ export class Reducer {
                ? removeHasMany.call(draft, action.relationship, action.relatedId)
                : {}
           }
+          break
+
+        case RESET:
+          draft.attributes = initialState.attributes
+          draft.relationships = initialState.relationships
+          break
+
+        case RESET_ATTRIBUTES:
+          if (Array.isArray(action.attributes)) {
+            action.attributes.forEach((attribute) => {
+              if (initialState.attributes[attribute]) {
+                draft.attributes[attribute] = initialState.attributes[attribute]
+              } else {
+                delete draft.attributes[attribute]
+              }
+            })
+          } else if (initialState.attributes[action.attributes]) {
+            draft.attributes[action.attributes] =  initialState.attributes[action.attributes]
+          } else {
+            delete draft.attributes[action.attributes]
+          }
+          break
+
+        case RESET_RELATIONSHIPS:
+          if (Array.isArray(action.relationships)) {
+            action.relationships.forEach((relation) => {
+              if (hasRelationship.call(initialState, relation)) {
+                draft.relationships = {
+                  ...draft.relationships,
+                  [relation]: initialState.relationships![relation] 
+                }
+              } else {
+                delete draft.relationships![relation]
+              }
+            })
+          } else if (hasRelationship.call(initialState, action.relationships)) {
+            draft.relationships = {
+              ...draft.relationships,
+              [action.relationships]: initialState.relationships![action.relationships]
+            }
+          } else {
+            delete draft.relationships![action.relationships]
+          }
+          break
       }
     })
   }

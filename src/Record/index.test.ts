@@ -70,7 +70,7 @@ describe('Record class', () => {
 
     expect(storeRecord.attributes.name).toBe('cloud company')
     expect(storeRecord.attributes.newAttr).toBe('fake value')
-    expect(storeRecord._record).not.toBe(testRecord)
+    expect(storeRecord).not.toBe(testRecord)
     unSubscribe()
   })
 
@@ -89,7 +89,7 @@ describe('Record class', () => {
 
     expect(storeRecord.attributes.name).toBe('cloud company')
     expect(storeRecord.attributes.newAttr).toBe('fake value')
-    expect(storeRecord._record).not.toBe(testRecord)
+    expect(storeRecord).not.toBe(testRecord)
     unSubscribe()
   })
 
@@ -111,7 +111,7 @@ describe('Record class', () => {
 
     expect(storeRecord.relationships && storeRecord.relationships.ceo.data).toBe(newCeo)
     expect(storeRecord.relationships && storeRecord.relationships.newRel.data).toBe(newRel)
-    expect(storeRecord._record).not.toBe(testRecord)
+    expect(storeRecord).not.toBe(testRecord)
     unSubscribe()
   })
 
@@ -133,7 +133,7 @@ describe('Record class', () => {
 
     expect(storeRecord.relationships && storeRecord.relationships.ceo.data).toBe(newCeo)
     expect(storeRecord.relationships && storeRecord.relationships.newRel.data).toBe(newRel)
-    expect(storeRecord._record).not.toBe(testRecord)
+    expect(storeRecord).not.toBe(testRecord)
     unSubscribe()
   })
 
@@ -156,7 +156,7 @@ describe('Record class', () => {
     expect(storeRecord.relationships && storeRecord.relationships.employees.data)
        .toEqual([{ type: 'employee', id: '1' }, newEmployee])
     expect(storeRecord.relationships && storeRecord.relationships.newRel.data).toEqual([newRel])
-    expect(storeRecord._record).not.toBe(testRecord)
+    expect(storeRecord).not.toBe(testRecord)
     unSubscribe()
   })
 
@@ -179,7 +179,7 @@ describe('Record class', () => {
     expect(storeRecord.relationships && storeRecord.relationships.employees.data)
        .toEqual([{ type: 'employee', id: '1' }, newEmployee])
     expect(storeRecord.relationships && storeRecord.relationships.newRel.data).toEqual([newRel])
-    expect(storeRecord._record).not.toBe(testRecord)
+    expect(storeRecord).not.toBe(testRecord)
     unSubscribe()
   })
 
@@ -198,7 +198,7 @@ describe('Record class', () => {
 
     expect(storeRecord.relationships && storeRecord.relationships.employees.data).toEqual([])
     expect(storeRecord.relationships && storeRecord.relationships.ceo.data).toEqual({})
-    expect(storeRecord._record).not.toBe(testRecord)
+    expect(storeRecord).not.toBe(testRecord)
     unSubscribe()
   })
 
@@ -217,7 +217,86 @@ describe('Record class', () => {
 
     expect(storeRecord.relationships && storeRecord.relationships.employees.data).toEqual([])
     expect(storeRecord.relationships && storeRecord.relationships.ceo.data).toEqual({})
-    expect(storeRecord._record).not.toBe(testRecord)
+    expect(storeRecord).not.toBe(testRecord)
+    unSubscribe()
+  })
+
+  test('reset', () => {
+    let storeRecord: any
+    const storeId = store.register(testRecord)
+
+    const unSubscribe = store.subscribe(storeId, (record: IRecord) => {
+      storeRecord = record
+    })
+
+    const record = new Record(storeRecord, store.getDispatcherFactory(storeId))
+    const newPhoto = { type: 'photo', id: '1'}
+
+    record
+      .setAttribute('name', 'cloud company')
+      .addHasMany('photos', newPhoto)
+      .reset()
+
+    expect(storeRecord.attributes.name).toBe('exivity')
+    expect(storeRecord.relationships.ceo.data).toEqual({ type: 'ceo', id: '1' })
+    expect(storeRecord.relationships.photos).toBe(undefined)
+    expect(storeRecord).not.toBe(testRecord)
+    unSubscribe()
+  })
+
+  test('resetAttributes', () => {
+    let storeRecord: any
+    const storeId = store.register(testRecord)
+
+    const unSubscribe = store.subscribe(storeId, (record: IRecord) => {
+      storeRecord = record
+    })
+
+    const record = new Record(storeRecord, store.getDispatcherFactory(storeId))
+
+    record
+      .setAttribute('one', 'one')
+      .setAttribute('two', 'two')
+      .setAttribute('three', 'three')
+      .setAttribute('four', 'four')
+      .resetAttributes('one')
+      .resetAttributes(['three', 'four'])
+
+    expect(storeRecord.attributes.name).toBe('exivity')
+    expect(storeRecord.relationships.ceo.data).toEqual({ type: 'ceo', id: '1' })
+    expect(storeRecord.attributes.one).toBe(undefined)
+    expect(storeRecord.attributes.two).toBe('two')
+    expect(storeRecord.attributes.three).toBe(undefined)
+    expect(storeRecord.attributes.four).toBe(undefined)
+    expect(storeRecord).not.toBe(testRecord)
+    unSubscribe()
+  })
+
+  test('resetRelationships', () => {
+    let storeRecord: any
+    const storeId = store.register(testRecord)
+
+    const unSubscribe = store.subscribe(storeId, (record: IRecord) => {
+      storeRecord = record
+    })
+
+    const record = new Record(storeRecord, store.getDispatcherFactory(storeId))
+
+    record
+      .addHasOne('one', { id: 'one', type: 'one' })
+      .addHasOne('two', { id: 'two', type: 'two' })
+      .addHasOne('three', { id: 'three', type: 'three' })
+      .addHasOne('four', { id: 'four', type: 'four' })
+      .resetRelationships('one')
+      .resetRelationships(['three', 'four'])
+
+    expect(storeRecord.attributes.name).toBe('exivity')
+    expect(storeRecord.relationships.ceo.data).toEqual({ type: 'ceo', id: '1' })
+    expect(storeRecord.relationships.one).toBe(undefined)
+    expect(storeRecord.relationships.two.data).toEqual({ id: 'two', type: 'two' })
+    expect(storeRecord.relationships.three).toBe(undefined)
+    expect(storeRecord.relationships.four).toBe(undefined)
+    expect(storeRecord).not.toBe(testRecord)
     unSubscribe()
   })
 

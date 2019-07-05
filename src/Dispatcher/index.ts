@@ -1,20 +1,22 @@
-import { ActionPayload, ActionType, ActionTypes, SET_ATTRIBUTE, ADD_HAS_ONE, ADD_HAS_MANY, REMOVE_RELATIONSHIP } from './types'
-import { RecordIdentifier} from '../Record/types'
-import { Curry } from '../utils/curry'
 import { curry } from 'ramda'
+
+import { RecordIdentifier} from '../Record/types'
 import { Record } from '../Record'
 
-export type ReducerFunction<T> = (action: ActionType & ActionPayload<T>) => void
-
-export type CurriedDispatchers = {
-  setAttribute: Curry<(attribute: string, value: any) => Record<CurriedDispatchers>>,
-  addHasOne: Curry<(relationship: string, recordIdentifier: RecordIdentifier) => Record<CurriedDispatchers>>,
-  addHasMany: Curry<(relationship: string, recordIdentifier: RecordIdentifier) => Record<CurriedDispatchers>>,
-  removeRelationship: Curry<(relationship: string, relatedId: string) => Record<CurriedDispatchers>>,
-  reset: (attribute: string, value: any) => Record<CurriedDispatchers>,
-  resetAttributes: (attributes: string|string[]) => Record<CurriedDispatchers>,
-  resetRelationships: (relationships: string|string[]) => Record<CurriedDispatchers>
-}
+import { 
+  ActionPayload, 
+  ActionType, 
+  ActionTypes, 
+  SET_ATTRIBUTE, 
+  ADD_HAS_ONE, 
+  ADD_HAS_MANY, 
+  REMOVE_RELATIONSHIP,
+  RESET,
+  RESET_ATTRIBUTES,
+  RESET_RELATIONSHIPS,
+  ReducerFunction,
+  CurriedDispatchers
+ } from './types'
 
 export class Dispatcher {
   create (this: Record<CurriedDispatchers>, reducer: ReducerFunction<ActionTypes>) {
@@ -56,17 +58,38 @@ export class Dispatcher {
         return this
       }),
       reset () {
+        reducer({
+          type: RESET,
+        })
+
         return this
       },
       resetAttributes (attributes: string|string[]) {
+        reducer({
+          type: RESET_ATTRIBUTES,
+          attributes
+        })
+
         return this
       },
       resetRelationships (relationships: string|string[]) {
+        reducer({
+          type: RESET_RELATIONSHIPS,
+          relationships
+        })
+
         return this
       }
     }
   }
 }
 
-export { ActionPayload, ActionType, ActionTypes, SET_ATTRIBUTE, ADD_HAS_ONE, ADD_HAS_MANY, REMOVE_RELATIONSHIP }
+export { 
+  ActionPayload, 
+  ActionType, 
+  ActionTypes, 
+  SET_ATTRIBUTE, 
+  ADD_HAS_ONE, 
+  ADD_HAS_MANY, 
+  REMOVE_RELATIONSHIP }
 export * from './types'
