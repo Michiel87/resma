@@ -58,3 +58,5 @@ export class Record<D> {
     return this._record
   }
 }
+
+export * from './types'

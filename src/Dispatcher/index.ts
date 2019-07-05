@@ -68,3 +68,4 @@ export class Dispatcher {
 }
 
 export { ActionPayload, ActionType, ActionTypes, SET_ATTRIBUTE, ADD_HAS_ONE, ADD_HAS_MANY, REMOVE_RELATIONSHIP }
+export * from './types'
