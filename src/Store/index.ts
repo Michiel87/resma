@@ -47,6 +47,7 @@ export class Store {
 
   subscribe (id: number, subscription: Subscription): () => void {
     this._subscriptions[id] = subscription
+    subscription(this._store[id])
 
     return () => this.unSubscribe(id)
   }
@@ -76,7 +77,10 @@ export class Store {
       const newRecordState = self._reducer.reduce({ record, initialState }, action)
 
       self._store[id] = newRecordState
-      self._subscriptions[id](newRecordState)
+
+      if (self._subscriptions[id]) {
+        self._subscriptions[id](newRecordState)
+      }
     }
   }
 }
