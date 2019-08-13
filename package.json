@@ -11,7 +11,7 @@
   "author": "Michiel de Vos <Michiel_87@hotmail.com>",
   "license": "ISC",
   "dependencies": {
-    "immer": "^2.1.5",
+    "immer": "^3.2.0",
     "ramda": "^0.26.1"
   },
   "devDependencies": {
