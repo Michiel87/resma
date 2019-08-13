@@ -45,17 +45,23 @@ export class Store {
     return this._store[id]
   }
 
-  subscribe (id: number, subscription: Subscription): () => void {
+  subscribe (id: number, subscription: Subscription, unSubscribeDelay?: number): () => Promise<IRecord> {
     this._subscriptions[id] = subscription
     subscription(this._store[id])
 
-    return () => this.unSubscribe(id)
+    return () => this.unSubscribe(id, unSubscribeDelay)
   }
 
-  unSubscribe (id: number) {
-    delete this._subscriptions[id]
-    delete this._store[id]
-    delete this._initialStateStore[id]
+  unSubscribe (id: number, unSubscribeDelay: number = 0): Promise<IRecord> {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        const record = this.getRecord(id)
+        delete this._subscriptions[id]
+        delete this._store[id]
+        delete this._initialStateStore[id]
+        resolve(record)
+      }, unSubscribeDelay)
+    })
   }
 
   getDispatcherFactory (storeId: number) {
