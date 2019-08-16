@@ -59,6 +59,14 @@ export class Record<D> {
   getRecord () {
     return this._record
   }
+
+  save () {
+
+  }
+
+  delete () {
+
+  }
 }
 
 export * from './types'
