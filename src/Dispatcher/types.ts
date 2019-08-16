@@ -1,4 +1,4 @@
-import { RecordIdentifier, Record } from '../Record'
+import { RecordIdentifier } from '../Record'
 import { Curry } from '../utils/curry'
 
 export const SET_ATTRIBUTE = 'SET_ATTRIBUTE'
@@ -65,13 +65,13 @@ export type ActionTypes =
 export type ReducerFunction<T> = (action: ActionType & ActionPayload<T>) => void
 
 export interface CurriedDispatchers {
-  setAttribute: Curry<(attribute: string, value: any) => Record<CurriedDispatchers>>,
-  addHasOne: Curry<(relationship: string, recordIdentifier: RecordIdentifier) => Record<CurriedDispatchers>>,
-  addHasMany: Curry<(relationship: string, recordIdentifier: RecordIdentifier) => Record<CurriedDispatchers>>,
-  removeRelationship: Curry<(relationship: string, relatedId: string) => Record<CurriedDispatchers>>,
-  reset: () => Record<CurriedDispatchers>,
-  resetAttributes: (attributes: string|string[]) => Record<CurriedDispatchers>,
-  resetRelationships: (relationships: string|string[]) => Record<CurriedDispatchers>
+  setAttribute: Curry<(attribute: string, value: any) => CurriedDispatchers>,
+  addHasOne: Curry<(relationship: string, recordIdentifier: RecordIdentifier) => CurriedDispatchers>,
+  addHasMany: Curry<(relationship: string, recordIdentifier: RecordIdentifier) => CurriedDispatchers>,
+  removeRelationship: Curry<(relationship: string, relatedId: string) => CurriedDispatchers>,
+  reset: () => CurriedDispatchers,
+  resetAttributes: (attributes: string|string[]) => CurriedDispatchers,
+  resetRelationships: (relationships: string|string[]) => CurriedDispatchers
   save: (options: any) => void
   delete: (options: any) => void
 }

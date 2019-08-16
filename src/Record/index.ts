@@ -1,7 +1,6 @@
 import { IRecord } from './types'
 import { Dispatchers, DispatcherFactory } from '../Dispatcher'
 
-// @todo Improve typings methods - make them dynamic and provide specified record types
 export class Record<D> {
   _record: IRecord
   _dispatchers: Dispatchers<D>
@@ -13,10 +12,8 @@ export class Record<D> {
   reset: Dispatchers<D>['reset']
   resetAttributes: Dispatchers<D>['resetAttributes']
   resetRelationships: Dispatchers<D>['resetRelationships']
-  save: (options: any) => void
-  delete: (options: any) => void
 
-  constructor (record: IRecord, dispatchers: DispatcherFactory<D> , { saveFn, deleteFn }: any) {
+  constructor (record: IRecord, dispatchers: DispatcherFactory<D>) {
     this._record = record
     this._dispatchers = dispatchers.create(this)
 
@@ -40,10 +37,6 @@ export class Record<D> {
 
     this.resetRelationships = this._dispatchers.resetRelationships
        .bind(this) as Dispatchers<D>['resetRelationships']
-
-    this.save = saveFn
-
-    this.delete = deleteFn
   }
 
   get id () {
