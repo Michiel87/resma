@@ -1,5 +1,5 @@
 import { IRecord } from './types'
-import { Dispatcher, DispatcherFactory } from '../Dispatcher'
+import { Dispatchers, DispatcherFactory } from '../Dispatcher'
 
 // @todo Improve typings methods - make them dynamic and provide specified record types
 export class Record<D> {
