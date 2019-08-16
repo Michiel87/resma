@@ -13,8 +13,10 @@ export class Record<D> {
   reset: Dispatchers<D>['reset']
   resetAttributes: Dispatchers<D>['resetAttributes']
   resetRelationships: Dispatchers<D>['resetRelationships']
+  save: (options: any) => void
+  delete: (options: any) => void
 
-  constructor (record: IRecord, dispatchers: DispatcherFactory<D>) {
+  constructor (record: IRecord, dispatchers: DispatcherFactory<D> , { saveFn, deleteFn }: any) {
     this._record = record
     this._dispatchers = dispatchers.create(this)
 
@@ -38,6 +40,10 @@ export class Record<D> {
 
     this.resetRelationships = this._dispatchers.resetRelationships
        .bind(this) as Dispatchers<D>['resetRelationships']
+
+    this.save = saveFn
+
+    this.delete = deleteFn
   }
 
   get id () {
@@ -58,14 +64,6 @@ export class Record<D> {
 
   getRecord () {
     return this._record
-  }
-
-  save () {
-
-  }
-
-  delete () {
-
   }
 }
 
