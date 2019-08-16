@@ -1,7 +1,5 @@
 import { curry } from 'ramda'
-
 import { RecordIdentifier} from '../Record/types'
-import { Record } from '../Record'
 
 import { 
   ActionPayload, 
@@ -14,12 +12,11 @@ import {
   RESET,
   RESET_ATTRIBUTES,
   RESET_RELATIONSHIPS,
-  ReducerFunction,
-  CurriedDispatchers
+  ReducerFunction
  } from './types'
 
-export class Dispatcher {
-  create (this: Record<CurriedDispatchers>, reducer: ReducerFunction<ActionTypes>) {
+export class Dispatcher<Record> {
+  create (this: Record, reducer: ReducerFunction<ActionTypes>) {
     return {
       setAttribute: curry((attribute: string, value: any) => {
         reducer({
@@ -92,4 +89,5 @@ export {
   ADD_HAS_ONE, 
   ADD_HAS_MANY, 
   REMOVE_RELATIONSHIP }
+  
 export * from './types'

@@ -1,10 +1,10 @@
 import { IRecord } from '../Record/types'
-import { Dispatcher } from '../Dispatcher'
-import { Reducer } from '../Reducer'
+import { DispatcherFactory, DispatcherMethods } from '../Dispatcher'
+import { Reducer } from '../Reducer' 
 
-export interface StoreProps {
+export interface StoreProps<Dispatcher extends DispatcherFactory<DispatcherMethods>, R extends Reducer> {
   dispatcher: Dispatcher
-  reducer: Reducer
+  reducer: R
   options?: {
     startId? : number
     store?: {
@@ -16,15 +16,15 @@ export interface StoreProps {
 export type Subscription = (record: IRecord) => void
 
 // @todo create separate Dispatcher type
-export class Store {
+export class Store<Dispatcher extends DispatcherFactory<DispatcherMethods>, R extends Reducer> {
   _dispatcher: Dispatcher
-  _reducer: Reducer
+  _reducer: R
   _store: any
   _initialStateStore: any
   _subscriptions: any
   _uId: number
 
-  constructor ({ dispatcher, reducer, options = {}}: StoreProps) {
+  constructor ({ dispatcher, reducer, options = {}}: StoreProps<Dispatcher, R>) {
     this._dispatcher = dispatcher
     this._reducer = reducer
     this._store = options.store || {}

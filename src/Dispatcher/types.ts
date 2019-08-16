@@ -1,5 +1,4 @@
 import { RecordIdentifier } from '../Record/types'
-import { Record } from '../Record'
 import { Curry } from '../utils/curry'
 
 export const SET_ATTRIBUTE = 'SET_ATTRIBUTE'
@@ -55,22 +54,36 @@ export interface ActionType {
 }
 
 export type ActionTypes = 
-ActionSetAttributes | 
-ActionAddHasOne | 
-ActionAddHasMany | 
-ActionRemoveRelationship |
-ActionReset |
-ActionResetAttributes |
-ActionResetRelationships
+  | ActionSetAttributes 
+  | ActionAddHasOne 
+  | ActionAddHasMany 
+  | ActionRemoveRelationship
+  | ActionReset
+  | ActionResetAttributes 
+  | ActionResetRelationships
 
 export type ReducerFunction<T> = (action: ActionType & ActionPayload<T>) => void
 
-export type CurriedDispatchers = {
-  setAttribute: Curry<(attribute: string, value: any) => Record<CurriedDispatchers>>,
-  addHasOne: Curry<(relationship: string, recordIdentifier: RecordIdentifier) => Record<CurriedDispatchers>>,
-  addHasMany: Curry<(relationship: string, recordIdentifier: RecordIdentifier) => Record<CurriedDispatchers>>,
-  removeRelationship: Curry<(relationship: string, relatedId: string) => Record<CurriedDispatchers>>,
-  reset: () => Record<CurriedDispatchers>,
-  resetAttributes: (attributes: string|string[]) => Record<CurriedDispatchers>,
-  resetRelationships: (relationships: string|string[]) => Record<CurriedDispatchers>
+export interface CurriedDispatchers {
+  setAttribute: Curry<(attribute: string, value: any) => CurriedDispatchers>,
+  addHasOne: Curry<(relationship: string, recordIdentifier: RecordIdentifier) => CurriedDispatchers>,
+  addHasMany: Curry<(relationship: string, recordIdentifier: RecordIdentifier) => CurriedDispatchers>,
+  removeRelationship: Curry<(relationship: string, relatedId: string) => CurriedDispatchers>,
+  reset: () => CurriedDispatchers,
+  resetAttributes: (attributes: string|string[]) => CurriedDispatchers,
+  resetRelationships: (relationships: string|string[]) => CurriedDispatchers
+}
+
+export interface DispatcherMethods {
+  setAttribute (...args: any): any
+  addHasOne (...args: any): any
+  addHasMany (...args: any): any
+  removeRelationship (...args: any): any
+  reset (...args: any): any
+  resetAttributes (...args: any): any
+  resetRelationships (...args: any): any
+}
+
+export type DispatcherFactory<D> = {
+  create(context: object): D
 }

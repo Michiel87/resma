@@ -1,42 +1,35 @@
-import { IRecord, Dispatchers, DispatcherFactory } from './types'
+import { DispatcherMethods, DispatcherFactory } from '../Dispatcher/types'
+import { IRecord } from './types'
 
-// @todo Improve typings methods - make them dynamic and provide specified record types
-export class Record<D> {
+export class Record<Dispatchers extends DispatcherMethods> {
   _record: IRecord
-  _dispatchers: Dispatchers<D>
+  _dispatchers: Dispatchers
 
-  setAttribute: ReturnType<Dispatchers<D>['setAttribute']>
-  addHasOne: ReturnType<Dispatchers<D>['addHasOne']>
-  addHasMany: ReturnType<Dispatchers<D>['addHasMany']>
-  removeRelationship: ReturnType<Dispatchers<D>['removeRelationship']>
-  reset: Dispatchers<D>['reset']
-  resetAttributes: Dispatchers<D>['resetAttributes']
-  resetRelationships: Dispatchers<D>['resetRelationships']
+  setAttribute: Dispatchers['setAttribute']
+  addHasOne: Dispatchers['addHasOne']
+  addHasMany: Dispatchers['addHasMany']
+  removeRelationship: Dispatchers['removeRelationship']
+  reset: Dispatchers['reset']
+  resetAttributes: Dispatchers['resetAttributes']
+  resetRelationships: Dispatchers['resetRelationships']
   
-  constructor (record: IRecord, dispatchers: DispatcherFactory<D>) {
+  constructor (record: IRecord, dispatchers: DispatcherFactory<Dispatchers>) {
     this._record = record
     this._dispatchers = dispatchers.create(this)
 
-    this.setAttribute = this._dispatchers.setAttribute
-      .bind(this) as ReturnType<Dispatchers<D>['setAttribute']>
+    this.setAttribute = this._dispatchers.setAttribute.bind(this)
 
-    this.addHasOne = this._dispatchers.addHasOne
-      .bind(this) as ReturnType<Dispatchers<D>['addHasOne']>
+    this.addHasOne = this._dispatchers.addHasOne.bind(this) 
 
-    this.addHasMany = this._dispatchers.addHasMany
-      .bind(this) as ReturnType<Dispatchers<D>['addHasMany']>
+    this.addHasMany = this._dispatchers.addHasMany.bind(this) 
 
-    this.removeRelationship = this._dispatchers.removeRelationship
-      .bind(this) as ReturnType<Dispatchers<D>['removeRelationship']>
+    this.removeRelationship = this._dispatchers.removeRelationship.bind(this) 
 
-    this.reset = this._dispatchers.reset
-      .bind(this) as Dispatchers<D>['reset']
+    this.reset = this._dispatchers.reset.bind(this) 
 
-    this.resetAttributes = this._dispatchers.resetAttributes
-      .bind(this) as Dispatchers<D>['resetAttributes']
+    this.resetAttributes = this._dispatchers.resetAttributes.bind(this)
 
-    this.resetRelationships = this._dispatchers.resetRelationships
-      .bind(this) as Dispatchers<D>['resetRelationships']
+    this.resetRelationships = this._dispatchers.resetRelationships.bind(this)
   }
 
   get id () {
