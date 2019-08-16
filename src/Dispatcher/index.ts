@@ -1,5 +1,7 @@
 import { curry } from 'ramda'
-import { RecordIdentifier} from '../Record/types'
+
+import { Record, RecordIdentifier } from '../Record'
+import { CurriedDispatchers } from './types'
 
 import { 
   ActionPayload, 
@@ -15,8 +17,8 @@ import {
   ReducerFunction
  } from './types'
 
-export class Dispatcher<Record> {
-  create (this: Record, reducer: ReducerFunction<ActionTypes>) {
+export class Dispatcher {
+  create (this: Record<CurriedDispatchers>, reducer: ReducerFunction<ActionTypes>) {
     return {
       setAttribute: curry((attribute: string, value: any) => {
         reducer({
