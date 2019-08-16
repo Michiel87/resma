@@ -1,6 +1,6 @@
 import produce from "immer"
 
-import { IRecord } from '../Record/types'
+import { IRecord } from '../Record'
 import { getRelationship, hasRelationship, removeHasMany } from '../Record/helpers'
 
 import { 

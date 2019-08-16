@@ -72,6 +72,8 @@ export interface CurriedDispatchers {
   reset: () => Record<CurriedDispatchers>,
   resetAttributes: (attributes: string|string[]) => Record<CurriedDispatchers>,
   resetRelationships: (relationships: string|string[]) => Record<CurriedDispatchers>
+  save: (options: any) => void
+  delete: (options: any) => void
 }
 
 export interface DispatcherMethods {
