@@ -85,7 +85,7 @@ export interface DispatcherMethods {
 }
 
 export type DispatcherFactory<D> = {
-  create(context: object): D
+  create(context: object): Dispatchers<D>
 }
 
 export type Dispatchers<D> = DispatcherMethods & D
