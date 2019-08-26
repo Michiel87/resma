@@ -11,6 +11,7 @@ import {
   ADD_HAS_ONE, 
   ADD_HAS_MANY, 
   REMOVE_RELATIONSHIP,
+  SET_RELATIONSHIP,
   RESET,
   RESET_ATTRIBUTES,
   RESET_RELATIONSHIPS,
@@ -52,6 +53,15 @@ export class Dispatcher {
           type: REMOVE_RELATIONSHIP,
           relationship,
           relatedId
+        })
+
+        return this
+      }),
+      setRelationship: curry((relationship: string, value: any) => {
+        reducer({
+          type: SET_RELATIONSHIP,
+          relationship,
+          value
         })
 
         return this

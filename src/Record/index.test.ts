@@ -221,6 +221,44 @@ describe('Record class', () => {
     unSubscribe()
   })
 
+  test('setRelationship', () => {
+    let storeRecord: any
+    const storeId = store.register(testRecord)
+
+    const unSubscribe = store.subscribe(storeId, (record: IRecord) => {
+      storeRecord = record
+    })
+
+    const record = new Record(storeRecord, store.getDispatcherFactory(storeId))
+
+    record.setRelationship('employees', [])
+    record.setRelationship('ceo', {})
+
+    expect(storeRecord.relationships && storeRecord.relationships.employees.data).toEqual([])
+    expect(storeRecord.relationships && storeRecord.relationships.ceo.data).toEqual({})
+    expect(storeRecord).not.toBe(testRecord)
+    unSubscribe()
+  })
+
+  test('setRelationship curried functionality', () => {
+    let storeRecord: any
+    const storeId = store.register(testRecord)
+
+    const unSubscribe = store.subscribe(storeId, (record: IRecord) => {
+      storeRecord = record
+    })
+
+    const record = new Record(storeRecord, store.getDispatcherFactory(storeId))
+
+    record.setRelationship('employees')([])
+    record.setRelationship('ceo')({})
+
+    expect(storeRecord.relationships && storeRecord.relationships.employees.data).toEqual([])
+    expect(storeRecord.relationships && storeRecord.relationships.ceo.data).toEqual({})
+    expect(storeRecord).not.toBe(testRecord)
+    unSubscribe()
+  })
+
   test('reset', () => {
     let storeRecord: any
     const storeId = store.register(testRecord)

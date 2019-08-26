@@ -9,6 +9,7 @@ export class Record<D> {
   addHasOne: ReturnType<Dispatchers<D>['addHasOne']>
   addHasMany: ReturnType<Dispatchers<D>['addHasMany']>
   removeRelationship: ReturnType<Dispatchers<D>['removeRelationship']>
+  setRelationship: ReturnType<Dispatchers<D>['setRelationship']>
   reset: Dispatchers<D>['reset']
   resetAttributes: Dispatchers<D>['resetAttributes']
   resetRelationships: Dispatchers<D>['resetRelationships']
@@ -28,6 +29,9 @@ export class Record<D> {
 
     this.removeRelationship = this._dispatchers.removeRelationship
        .bind(this) as ReturnType<Dispatchers<D>['removeRelationship']>
+
+    this.setRelationship = this._dispatchers.setRelationship
+       .bind(this) as ReturnType<Dispatchers<D>['setRelationship']>
 
     this.reset = this._dispatchers.reset
        .bind(this) as Dispatchers<D>['reset']

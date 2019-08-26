@@ -8,7 +8,8 @@ import {
   SET_ATTRIBUTE, 
   ADD_HAS_ONE, 
   ADD_HAS_MANY, 
-  REMOVE_RELATIONSHIP, 
+  REMOVE_RELATIONSHIP,
+  SET_RELATIONSHIP,
   RESET, 
   RESET_ATTRIBUTES, 
   RESET_RELATIONSHIPS 
@@ -60,6 +61,14 @@ export class Reducer {
             draft.relationships![action.relationship].data = Array.isArray(getRelationship.call(draft, action.relationship))
                ? removeHasMany.call(draft, action.relationship, action.relatedId)
                : {}
+          }
+          break
+
+        case SET_RELATIONSHIP:
+          if (hasRelationship.call(draft, action.relationship)) {
+            draft.relationships![action.relationship].data = action.value
+          } else {
+            draft.relationships![action.relationship] = { data: action.value }
           }
           break
 

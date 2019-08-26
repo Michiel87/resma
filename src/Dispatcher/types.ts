@@ -5,6 +5,7 @@ export const SET_ATTRIBUTE = 'SET_ATTRIBUTE'
 export const ADD_HAS_ONE = 'ADD_HAS_ONE'
 export const ADD_HAS_MANY = 'ADD_HAS_MANY'
 export const REMOVE_RELATIONSHIP = 'REMOVE_RELATIONSHIP'
+export const SET_RELATIONSHIP = 'SET_RELATIONSHIP'
 export const RESET = 'RESET'
 export const RESET_ATTRIBUTES = 'RESET_ATTRIBUTES'
 export const RESET_RELATIONSHIPS = 'RESET_RELATIONSHIPS'
@@ -33,6 +34,12 @@ export interface ActionRemoveRelationship {
   relatedId: string
 }
 
+export interface ActionSetRelationship {
+  type: typeof SET_RELATIONSHIP
+  relationship: string,
+  value: any
+}
+
 export interface ActionReset {
   type: typeof RESET
 }
@@ -58,6 +65,7 @@ export type ActionTypes =
   | ActionAddHasOne 
   | ActionAddHasMany 
   | ActionRemoveRelationship
+  | ActionSetRelationship
   | ActionReset
   | ActionResetAttributes 
   | ActionResetRelationships
@@ -81,6 +89,7 @@ export interface DispatcherMethods {
   addHasOne (...args: any): any
   addHasMany (...args: any): any
   removeRelationship (...args: any): any
+  setRelationship (...args: any): any
   reset (...args: any): any
   resetAttributes (...args: any): any
   resetRelationships (...args: any): any
