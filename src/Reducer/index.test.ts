@@ -1,5 +1,5 @@
 import { Reducer } from './'
-import { SET_ATTRIBUTE, ADD_HAS_ONE, ADD_HAS_MANY } from '../Dispatcher'
+import { SET_ATTRIBUTE, SET_RELATIONSHIP, ADD_HAS_ONE, ADD_HAS_MANY } from '../Dispatcher'
 
 const reducer = new Reducer()
 
@@ -278,6 +278,136 @@ describe('Reducer', () => {
       type: ADD_HAS_MANY as typeof ADD_HAS_MANY,
       relationship: 'employees',
       recordIdentifier: employee
+    }
+
+    const newRecord = reducer.reduce(reducerRecord, action)
+
+    expect(newRecord).not.toBe(record)
+    expect(newRecord).toEqual({
+      type: 'company',
+      attributes: {},
+      relationships: {
+        ceo,
+        employees: {
+          data: [employee]
+        }
+      }
+    })
+  })
+
+  test('SET_RELATIONSHIP - new relationship', () => {
+    const record = {
+      type: 'company',
+      attributes: {}
+    }
+
+    const initialState = {
+      type: 'company',
+      attributes: {}
+    }
+
+    const employee = {
+      type: 'employee',
+      id: '1'
+    }
+
+    const reducerRecord = { record, initialState }
+
+    const action = {
+      type: SET_RELATIONSHIP as typeof SET_RELATIONSHIP,
+      relationship: 'employees',
+      value: [employee]
+    }
+
+    const newRecord = reducer.reduce(reducerRecord, action)
+
+    expect(newRecord).not.toBe(record)
+    expect(newRecord).toEqual({
+      type: 'company',
+      attributes: {},
+      relationships: {
+        employees: {
+          data: [employee]
+        }
+      }
+    })
+  })
+
+  test('SET_RELATIONSHIP - replace relationship', () => {
+    const record = {
+      type: 'company',
+      attributes: {},
+      relationships: {
+        employees: {
+          data: [{ type: 'employee', id: '45' }]
+        }
+      }
+    }
+
+    const initialState = {
+      type: 'company',
+      attributes: {}
+    }
+
+    const employee = {
+      type: 'employee',
+      id: '1'
+    }
+
+    const reducerRecord = { record, initialState }
+
+    const action = {
+      type: SET_RELATIONSHIP as typeof SET_RELATIONSHIP,
+      relationship: 'employees',
+      value: [employee]
+    }
+
+    const newRecord = reducer.reduce(reducerRecord, action)
+
+    expect(newRecord).not.toBe(record)
+    expect(newRecord).toEqual({
+      type: 'company',
+      attributes: {},
+      relationships: {
+        employees: {
+          data: [employee]
+        }
+      }
+    })
+  })
+
+  test('SET_RELATIONSHIP - keeps other relations intact', () => {
+    const ceo = {
+      data: {
+        type: 'ceo',
+        id: '1'
+      }
+    }
+
+    const record = {
+      type: 'company',
+      attributes: {},
+      relationships: {
+        ceo
+      }
+    }
+
+    const initialState = {
+      type: 'company',
+      attributes: {}
+    }
+
+    const employee = {
+      type: 'employee',
+      id: '1'
+    }
+
+    const reducerRecord = { record, initialState }
+
+    const action = {
+      type: SET_RELATIONSHIP as typeof SET_RELATIONSHIP,
+      relationship: 'employees',
+      value: [employee]
     }
 
     const newRecord = reducer.reduce(reducerRecord, action)

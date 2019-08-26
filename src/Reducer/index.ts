@@ -68,7 +68,12 @@ export class Reducer {
           if (hasRelationship.call(draft, action.relationship)) {
             draft.relationships![action.relationship].data = action.value
           } else {
-            draft.relationships![action.relationship] = { data: action.value }
+            draft.relationships = {
+              ...draft.relationships,
+              [action.relationship]: {
+                data: action.value
+              }
+            }
           }
           break
 
